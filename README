@@ -1,0 +1,5 @@
+This directory is a starting build opencv4 setup. Use it to help get small projects started quickly.
+
+It's just a single source file and a Makefile, both taken from samples online. The 
+Makefile has been edited to build opencv projects, but without using CMake like their
+tutorials do.
