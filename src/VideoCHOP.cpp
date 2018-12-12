@@ -26,10 +26,49 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
         return false;
     }
 
+    // Get video info and frames
+    std::vector<Mat> frames;
+    int codec;
+    double fps;
+    Size size;
+    if (!getFrames(frames, videoname, codec, fps, size))
+    {
+        LOG << "heck\n";
+        return false;
+    }
+
     /*
      * Make clips
      */
+    for (timeVal &time : times)
+    {
+        ++clipnum;
 
+        // Make the new clip's name
+        std::stringstream ss;
+        ss << dest << clipnum << "_" << time.m << ":" << time.s << "_" << time.m2 << ":" << time.s2 << ".avi";
+        std::string clipname = ss.str();
+
+        // Make WideoWriter
+        VideoWriter clip = VideoWriter(clipname, codec, fps, size, true);
+
+        // Get the frame numbers for this clip
+        int start = fps * ((60*time.m) + time.s + time.ms/60);
+        int end = fps * ((60*time.m2) + time.s2 + time.ms/60);
+
+        while (start <= end)
+        {
+            clip << frames[start];
+        }
+
+        // Destructor will handle the closing of the video file.
+    }
+
+
+    /*
+     * Make clips
+     */
+/* Old method
     for (timeVal &time : times)
     {
         ++clipnum;
@@ -66,7 +105,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 
         // Destructor will handle closing the video file.
     }
-
+*/
     return success;
 }
 
