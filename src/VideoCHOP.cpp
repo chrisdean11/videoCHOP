@@ -26,49 +26,9 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
         return false;
     }
 
-    // Get video info and frames
-    std::vector<Mat> frames;
-    int codec;
-    double fps;
-    Size size;
-    if (!getFrames(frames, videoname, codec, fps, size))
-    {
-        LOG << "heck\n";
-        return false;
-    }
-
     /*
      * Make clips
      */
-    for (timeVal &time : times)
-    {
-        ++clipnum;
-
-        // Make the new clip's name
-        std::stringstream ss;
-        ss << dest << clipnum << "_" << time.m << ":" << time.s << "_" << time.m2 << ":" << time.s2 << ".avi";
-        std::string clipname = ss.str();
-
-        // Make WideoWriter
-        VideoWriter clip = VideoWriter(clipname, codec, fps, size, true);
-
-        // Get the frame numbers for this clip
-        int start = fps * ((60*time.m) + time.s + time.ms/60);
-        int end = fps * ((60*time.m2) + time.s2 + time.ms/60);
-
-        while (start <= end)
-        {
-            clip << frames[start];
-        }
-
-        // Destructor will handle the closing of the video file.
-    }
-
-
-    /*
-     * Make clips
-     */
-/* Old method
     for (timeVal &time : times)
     {
         ++clipnum;
@@ -76,7 +36,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 
         // Make the new clip's name
         std::stringstream ss;
-        ss << dest << clipnum << "_" << time.m << ":" << time.s << "_" << time.m2 << ":" << time.s2 << ".avi";
+        ss << dest << clipnum << "_" << time.m << time.s << "-" << time.m2 << time.s2 << ".avi";
         std::string clipname = ss.str();
 
         if (!vid.isOpened())
@@ -105,8 +65,69 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 
         // Destructor will handle closing the video file.
     }
-*/
+
     return success;
+}
+
+// Make a new video by cropping a source video while following an object of a certain color
+bool crop(std::string video, Size s, int color, std::string dest)
+{
+    VideoCapture vid = VideoCapture(videoname);
+
+    // Make the new clip's name
+    std::stringstream ss;
+    ss << dest << "Cropped" << ".avi";
+    std::string clipname = ss.str();
+
+    if (!vid.isOpened())
+    {
+        LOG << "Error: " << videoname << " not opened successfully on making " << clipname << "\n";
+        success = false;
+        break;
+    }
+
+    // Get clip info: size, fourcc, fps
+    Size S = Size( (int)vid.get(CAP_PROP_FRAME_WIDTH), (int)vid.get(CAP_PROP_FRAME_HEIGHT));
+    int ex = static_cast<int>(vid.get(CAP_PROP_FOURCC));     // Get Codec Type- Int form
+    double fps = vid.get(CAP_PROP_FPS);
+
+    // Make WideoWriter
+    VideoWriter cropped = VideoWriter(clipname, ex, fps, s, true);
+    Point previousFrame;
+
+    // Go through each frame, making a new cropped frame from each boy
+    for(;;)
+    {
+        Mat mat; 
+
+        if(!vid.read(mat))
+        {
+            LOG << "Finished reading video frames\n";
+            break;
+        }
+
+        Mat mat2 = Mat(s, mat.type());
+
+        // Obtain location
+        Point p = getLocation(const Mat &mat, int color);
+
+        // Reconcile with previous frame location
+
+        // Adjust for edges
+
+        // Crop to final location
+
+        cropped << mat2; 
+    }
+
+}
+
+// Returns the center of mass of the color indicated
+Point VideoCHOP::getColor(const Mat &mat, int color)
+{
+    if(Mat == NULL){}
+    LOG << "color "<<color<<"\n";
+    return Point(0,0);
 }
 
 // File is a list of pairs of times. Each line is: "m:s m2:s2"
@@ -123,7 +144,7 @@ bool VideoCHOP::getTimes(std::string filename, std::vector<timeVal> &times)
         timeVal tv;
         char c, c2;
 
-        if ( !(iss >> tv.m >> c >> tv.s >> tv.m2 >> c2 >> tv.s2) ) 
+        if ( !(iss >> tv.m >> c >> tv.s >> tv.m2 >> c2 >> tv.s2 ) ) 
         {
             LOG << "ERROR: " << c << c2 << " " << tv.toString();
             success = false;
@@ -134,13 +155,22 @@ bool VideoCHOP::getTimes(std::string filename, std::vector<timeVal> &times)
         times.push_back(tv);
     }
 
+    LOG << "times: \n";
+
+    for (auto time : times)
+    {
+        LOG << time.toString()<<"\n";
+    } 
+
+    LOG<<"leaving getTimes()\n";
+
     return success;
 }
 
-// Copy video into vector of matrices.
+// Copy video into vector of matrices. Explodes memory usage and is great for crashing your machine.
 static bool getFrames(std::vector<Mat> frames, const std::string videoname, int &codec, double &fps, Size &size)
 {
-    VideoCapture2 vid = VideoCapture(videoname);
+    VideoCapture vid = VideoCapture(videoname);
 
     if (!vid.isOpened())
     {
@@ -151,20 +181,21 @@ static bool getFrames(std::vector<Mat> frames, const std::string videoname, int 
     // Get video info
     size = Size( (int)vid.get(CAP_PROP_FRAME_WIDTH), (int)vid.get(CAP_PROP_FRAME_HEIGHT));
     codec = static_cast<int>(vid.get(CAP_PROP_FOURCC));     // Get Codec Type- Int form
-    double fps = vid.get(CAP_PROP_FPS);
+    fps = vid.get(CAP_PROP_FPS);
 
     for(;;)
     { 
-        Mat mat; 
-        vid >> mat;
+        Mat mat;
 
-        if(mat.empty())
+        if(!vid.read(mat))
         {
+            LOG << "Finished reading video frames\n";
             break;
         }
 
-        frames.push_back(mat);
+        frames.push_back(mat.clone());
     }
 
+    LOG << "Got framez\n";
     return true;
 }

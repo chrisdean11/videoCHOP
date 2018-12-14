@@ -14,21 +14,20 @@ class VideoCHOP
 public:
     VideoCHOP() {}
     bool chop(std::string video, std::string filename, std::string dest);
+    bool crop(std::string video, Size s, int color, std::string dest);
 
 private:
     struct timeVal
     {
         int m;
         int s;
-        int ms;
         int m2;
         int s2;
-        int ms2;
     
         std::string toString()
         {
             std::stringstream ss;
-            ss << "m:s:ms,m2:s2:ms2=" << m << ":" << s << ":" << ms << "," << m2 << ":" << s2 << ":" << ms2 << "\n";
+            ss << "m:s,m2:s2=" << m << ":" << s << "," << m2 << ":" << s2 << "\n";
             return ss.str();
         }
     };

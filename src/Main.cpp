@@ -21,7 +21,7 @@ int main(int argc, char** argv )
     std::string times = std::string(argv[2]);
     std::string dst = "./";
 
-    if(argc == 3)
+    if(argc == 4)
     {
         dst = std::string(argv[3]);
     }
