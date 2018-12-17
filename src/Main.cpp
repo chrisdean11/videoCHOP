@@ -3,6 +3,7 @@
 */
 
 #include <stdio.h>
+#include <sstream>
 //#include <opencv2/opencv.hpp> // opencv installation put all my headers under /usr/local/include/opencv4. See Makefile.
 
 #include "LOG.h"
@@ -10,26 +11,48 @@
 
 int main(int argc, char** argv )
 {
+    VideoCHOP vc;
+
     // Parse arguments
-    if (argc != 3 && argc != 4)
+    if(argc == 7 && std::string(argv[1]).compare("crop") == 0) // CROP
     {
-        LOG << "Usage: ./ProgramName /path/to/filename.avi /path/to/timestamps.txt /path/to/destinationfolder(optional)\n"<<argc<<" arguments provided.\n";
-        return 1;
+        std::string srcFile = std::string(argv[2]);
+        std::string dstFile = std::string(argv[3]);
+
+        /*
+            std::stringstream ss;
+            ss << dest << clipnum << "_" << time.m << time.s << "-" << time.m2 << time.s2 << ".avi";
+            std::string clipname = ss.str();
+        */
+        std::stringstream w,h,c;
+        int width, height, color;
+        w << argv[4];
+        h << argv[5];
+        c << std::hex << argv[6];
+        w >> width;
+        h >> height;
+        c >> color; 
+
+        if (!vc.crop(srcFile, width, height, color, dstFile))
+        {
+            return 1;
+        }
     }
-
-    std::string src = std::string(argv[1]);
-    std::string times = std::string(argv[2]);
-    std::string dst = "./";
-
-    if(argc == 4)
+    else if (argc == 5 && std::string(argv[1]).compare("chop") == 0) // CHOP
     {
-        dst = std::string(argv[3]);
+        std::string src = std::string(argv[2]);
+        std::string times = std::string(argv[3]);
+        std::string dst = std::string(argv[4]);
+    
+        if (!vc.chop(src, times, dst))
+        {
+            return 1;
+        }
     }
-
-    VideoCHOP videochop;
-
-    if (!videochop.chop(src, times, dst))
+    else
     {
+        LOG << "Usage: ./ProgramName chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n";
+        LOG << "Usage: ./ProgramName crop /path/to/filename.mp4 /path/to/destfile.mp4 width height color\n";
         return 1;
     }
 
