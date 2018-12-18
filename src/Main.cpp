@@ -4,7 +4,6 @@
 
 #include <stdio.h>
 #include <sstream>
-//#include <opencv2/opencv.hpp> // opencv installation put all my headers under /usr/local/include/opencv4. See Makefile.
 
 #include "LOG.h"
 #include "VideoCHOP.h"
@@ -18,12 +17,6 @@ int main(int argc, char** argv )
     {
         std::string srcFile = std::string(argv[2]);
         std::string dstFile = std::string(argv[3]);
-
-        /*
-            std::stringstream ss;
-            ss << dest << clipnum << "_" << time.m << time.s << "-" << time.m2 << time.s2 << ".avi";
-            std::string clipname = ss.str();
-        */
         std::stringstream w,h,c;
         int width, height, color;
         w << argv[4];

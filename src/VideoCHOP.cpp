@@ -3,38 +3,24 @@
 
 */
 #include <fstream>
-
-#include <opencv2/core.hpp>     // Basic OpenCV structures (cv::Mat, Scalar)
-#include <opencv2/imgproc.hpp>  // Gaussian Blur
-#include <opencv2/highgui.hpp>  // OpenCV window I/O
-#include <opencv2/videoio.hpp>  // Video write
-
 #include "VideoCHOP.h"
 #include "LOG.h"
 
 #define FRAMESPEED 1 // Max number of pixels a cropped video can move in x or y, per frame.
 
 using namespace cv;
+bool first = true;
 
-struct timeVal
-{
-    int m;
-    int s;
-    int m2;
-    int s2;
+// Code to find threshold values from first frame taken from https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
+int showAndSelectColor(Mat frame);
+const int max_value_H = 360/2;
+const int max_value = 255;
+const String window_capture_name = "Video Capture";
+const String window_detection_name = "Object Detection";
+int low_H = 0, low_S = 0, low_V = 0;
+int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
-    std::string toString()
-    {
-        std::stringstream ss;
-        ss << "m:s,m2:s2=" << m << ":" << s << "," << m2 << ":" << s2 << "\n";
-        return ss.str();
-    }
-};
 
-// "Private" function declarations
-bool getTimes(std::string filename, std::vector<timeVal> &times);
-bool getFrames(std::vector<Mat> &frames, const std::string &videoname, int &codec, double &fps, Size &size);
-Point findObject(const Mat &mat, int color);
 
 bool VideoCHOP::chop(std::string videoname, std::string filename, std::string dest)
 {
@@ -175,7 +161,7 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, int color, st
 }
 
 // File is a list of pairs of times. Each line is: "m:s m2:s2"
-bool getTimes(std::string filename, std::vector<timeVal> &times)
+bool VideoCHOP::getTimes(std::string filename, std::vector<timeVal> &times)
 {
     bool success = true;
     std::ifstream file;
@@ -212,7 +198,7 @@ bool getTimes(std::string filename, std::vector<timeVal> &times)
 }
 
 // Copy video into vector of matrices. Explodes memory usage and is great for crashing your machine.
-bool getFrames(std::vector<Mat> &frames, const std::string &videoname, int &codec, double &fps, Size &size)
+bool VideoCHOP::getFrames(std::vector<Mat> &frames, const std::string &videoname, int &codec, double &fps, Size &size)
 {
     VideoCapture vid = VideoCapture(videoname);
 
@@ -242,17 +228,90 @@ bool getFrames(std::vector<Mat> &frames, const std::string &videoname, int &code
 
     return true;
 }
-
 // Returns center of mass of a certain color. If it failed to find the object, it will return (-1,-1)
-Point findObject(const Mat &mat, int color)
+Point VideoCHOP::findObject(const Mat &frame, int color)
 {
-    if (0) LOG << "color is " << color <<"\n";
-    // For now, return very center
-    return Point(mat.cols/2, mat.rows/2);
+    Mat frame_HSV, frame_threshold;
 
-    // Threshold image
+    // Get thresholded image
+    if(first)
+    {
+        showAndSelectColor(mat);
+        first = false;
+    }
+
+    cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
+    inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
+
+    // Detect the object based on HSV Range Values
 
     // Process, remove any small spots etc
 
     // Find center
+    return Point(mat.cols/2, mat.rows/2);
+}
+
+static void on_low_H_thresh_trackbar(int, void *)
+{
+    low_H = min(high_H-1, low_H);
+    setTrackbarPos("Low H", window_detection_name, low_H);
+}
+static void on_high_H_thresh_trackbar(int, void *)
+{
+    high_H = max(high_H, low_H+1);
+    setTrackbarPos("High H", window_detection_name, high_H);
+}
+static void on_low_S_thresh_trackbar(int, void *)
+{
+    low_S = min(high_S-1, low_S);
+    setTrackbarPos("Low S", window_detection_name, low_S);
+}
+static void on_high_S_thresh_trackbar(int, void *)
+{
+    high_S = max(high_S, low_S+1);
+    setTrackbarPos("High S", window_detection_name, high_S);
+}
+static void on_low_V_thresh_trackbar(int, void *)
+{
+    low_V = min(high_V-1, low_V);
+    setTrackbarPos("Low V", window_detection_name, low_V);
+}
+static void on_high_V_thresh_trackbar(int, void *)
+{
+    high_V = max(high_V, low_V+1);
+    setTrackbarPos("High V", window_detection_name, high_V);
+}
+
+int showAndSelectColor(Mat frame)
+{
+    //cap
+    namedWindow(window_capture_name);
+    namedWindow(window_detection_name);
+
+    // Trackbars to set thresholds for HSV values
+    createTrackbar("Low H", window_detection_name, &low_H, max_value_H, on_low_H_thresh_trackbar);
+    createTrackbar("High H", window_detection_name, &high_H, max_value_H, on_high_H_thresh_trackbar);
+    createTrackbar("Low S", window_detection_name, &low_S, max_value, on_low_S_thresh_trackbar);
+    createTrackbar("High S", window_detection_name, &high_S, max_value, on_high_S_thresh_trackbar);
+    createTrackbar("Low V", window_detection_name, &low_V, max_value, on_low_V_thresh_trackbar);
+    createTrackbar("High V", window_detection_name, &high_V, max_value, on_high_V_thresh_trackbar);
+    Mat frame_HSV, frame_threshold;
+
+    while (true) 
+    {
+        // Convert from BGR to HSV colorspace
+        cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
+        // Detect the object based on HSV Range Values
+        inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
+        // Show the frames
+        imshow(window_capture_name, frame);
+        imshow(window_detection_name, frame_threshold);
+        char key = (char) waitKey(30);
+        if (key == 'q' || key == 27)
+        {
+            break;
+        }
+    }
+
+    return 0;
 }

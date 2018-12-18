@@ -9,6 +9,11 @@
 #include <string>
 #include <vector>
 
+#include <opencv2/core.hpp>     // Basic OpenCV structures (cv::Mat, Scalar)
+#include <opencv2/imgproc.hpp>  // Gaussian Blur
+#include <opencv2/highgui.hpp>  // OpenCV window I/O
+#include <opencv2/videoio.hpp>  // Video write
+
 class VideoCHOP
 {
 public:
@@ -17,5 +22,22 @@ public:
     bool crop(std::string video, int width, int height, int color, std::string dest);
 
 private:
+    struct timeVal
+    {
+        int m;
+        int s;
+        int m2;
+        int s2;
+    
+        std::string toString()
+        {
+            std::stringstream ss;
+            ss << "m:s,m2:s2=" << m << ":" << s << "," << m2 << ":" << s2 << "\n";
+            return ss.str();
+        }
+    };
 
+    bool getTimes(std::string filename, std::vector<timeVal> &times);
+    bool getFrames(std::vector<cv::Mat> &frames, const std::string &videoname, int &codec, double &fps, cv::Size &size);
+    cv::Point findObject(const cv::Mat &mat, int color);
 };
