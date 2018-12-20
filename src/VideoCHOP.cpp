@@ -78,8 +78,8 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
     return success;
 }
 
-// Make a new video by cropping a source video while following an object of a certain color
-bool VideoCHOP::crop(std::string videoname, int width, int height, int color, std::string dest)
+// Make a new video by cropping a source video while following a chosen object
+bool VideoCHOP::crop(std::string videoname, int width, int height, std::string dest)
 {
     VideoCapture vid = VideoCapture(videoname);
 
@@ -114,7 +114,7 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, int color, st
         Mat mat2 = Mat(s, mat.type());
 
         // Obtain location
-        Point loc = findObject(mat, color);
+        Point loc = findObject(mat);
         if(loc.x == -1) loc = prevLoc;
 
         // Reconcile loc with previous frame location
@@ -228,29 +228,64 @@ bool VideoCHOP::getFrames(std::vector<Mat> &frames, const std::string &videoname
 
     return true;
 }
-// Returns center of mass of a certain color. If it failed to find the object, it will return (-1,-1)
-Point VideoCHOP::findObject(const Mat &frame, int color)
+
+// Returns center point of the biggest object detected after threshold.
+Point VideoCHOP::findObject(const Mat &frame)
 {
     Mat frame_HSV, frame_threshold;
 
-    // Get thresholded image
+    // Make thresholded image
     if(first)
     {
-        showAndSelectColor(mat);
+        // Get HSV threshold from the first frame
+        showAndSelectColor(frame);
         first = false;
     }
-
     cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
     inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
 
+    // Process thresholded image, remove any small spots etc
+    // ...
+
     // Detect the object based on HSV Range Values
+    std::vector<std::vector<Point>> contours;
+    Mat contourOutput = frame_threshold.clone();
+    findContours(contourOutput, contours,  RETR_LIST, CHAIN_APPROX_NONE);
 
-    // Process, remove any small spots etc
+    // Find the biggest object
+    int biggestIndex;
+    int biggestArea = 0;
+    for(size_t i = 0; i < contours.size(); i++)
+    {
+        int area = contourArea(contours[i]); // Vector of points 
 
+        //for(auto pt : contours[i])
+        //{
+        //    ++mass;
+        //}
+        ////try{}catch(zerodivisionerror)
+
+        if(area > biggestArea)
+        {
+            biggestArea = area;
+            biggestIndex = i;
+        }
+    }
+
+    Moments mu = moments(contours[biggestIndex]);
+
+    //Point2f mc = Point2f(   static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), 
+    //                        static_cast<float>(mu.m01 / (mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
+
+    Point mc = Point( (int)((float)mu.m10 / ((float)mu.m00 + 1e-5)) , 
+                        (int)((float)mu.m01 / ((float)mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
+    
     // Find center
-    return Point(mat.cols/2, mat.rows/2);
+    //return Point(mat.cols/2, mat.rows/2);
+    return mc;
 }
 
+// TODO fix this nonsense to not use globals. Make it one function.
 static void on_low_H_thresh_trackbar(int, void *)
 {
     low_H = min(high_H-1, low_H);

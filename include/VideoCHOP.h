@@ -19,7 +19,7 @@ class VideoCHOP
 public:
     VideoCHOP() {}
     bool chop(std::string video, std::string filename, std::string dest);
-    bool crop(std::string video, int width, int height, int color, std::string dest);
+    bool crop(std::string video, int width, int height, std::string dest);
 
 private:
     struct timeVal
@@ -39,5 +39,5 @@ private:
 
     bool getTimes(std::string filename, std::vector<timeVal> &times);
     bool getFrames(std::vector<cv::Mat> &frames, const std::string &videoname, int &codec, double &fps, cv::Size &size);
-    cv::Point findObject(const cv::Mat &mat, int color);
+    cv::Point findObject(const cv::Mat &mat);
 };

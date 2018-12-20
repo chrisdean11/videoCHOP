@@ -13,20 +13,18 @@ int main(int argc, char** argv )
     VideoCHOP vc;
 
     // Parse arguments
-    if(argc == 7 && std::string(argv[1]).compare("crop") == 0) // CROP
+    if(argc == 6 && std::string(argv[1]).compare("crop") == 0) // CROP
     {
         std::string srcFile = std::string(argv[2]);
         std::string dstFile = std::string(argv[3]);
-        std::stringstream w,h,c;
-        int width, height, color;
+        std::stringstream w,h;
+        int width, height;
         w << argv[4];
         h << argv[5];
-        c << std::hex << argv[6];
         w >> width;
         h >> height;
-        c >> color; 
 
-        if (!vc.crop(srcFile, width, height, color, dstFile))
+        if (!vc.crop(srcFile, width, height, dstFile))
         {
             return 1;
         }
@@ -45,7 +43,7 @@ int main(int argc, char** argv )
     else
     {
         LOG << "Usage: ./ProgramName chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n";
-        LOG << "Usage: ./ProgramName crop /path/to/filename.mp4 /path/to/destfile.mp4 width height color\n";
+        LOG << "Usage: ./ProgramName crop /path/to/filename.mp4 /path/to/destfile.mp4 width height\n";
         return 1;
     }
 
