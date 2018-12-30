@@ -26,7 +26,6 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 {
     bool success = true;
     std::vector<timeVal> times;
-    int clipnum = 0;
 
     if (!getTimes(filename, times))
     {
@@ -36,6 +35,10 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
     /*
      * Make clips
      */
+
+    /*Old - takes 16 seconds on a 26s test clip*/
+
+    int clipnum = 0;
     for (timeVal &time : times)
     {
         ++clipnum;
@@ -74,6 +77,66 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 
         // Destructor will handle closing the video file.
     }
+    /*Old */
+
+    /*New - takes 17 seconds on a 26s test clip*/
+
+    /*
+     * Make clips
+     */
+/*
+    VideoCapture vid = VideoCapture(videoname);
+
+    if (!vid.isOpened())
+    {
+        LOG << "Error: " << videoname << " not opened successfully\n";
+        return false;
+    }
+
+    // Get clip info: size, fourcc, fps
+    Size S = Size( (int)vid.get(CAP_PROP_FRAME_WIDTH), (int)vid.get(CAP_PROP_FRAME_HEIGHT));
+    int ex = static_cast<int>(vid.get(CAP_PROP_FOURCC));     // Get Codec Type- Int form
+    double fps = vid.get(CAP_PROP_FPS);
+
+    // Make writer streams
+    std::vector<VideoWriter> clips;
+
+    for(uint i = 0; i < times.size(); i++)
+    {
+        // Make the new clip's name
+        std::stringstream ss;
+        ss << dest << "clip" << i << "_" << times[i].m << times[i].s << "-" << times[i].m2 << times[i].s2 << ".mp4";
+        std::string clipname = ss.str();
+
+        VideoWriter clip = VideoWriter(clipname, ex, fps, S, true);
+
+        clips.push_back(clip);
+    }
+
+    int current = 0; // Current frame
+    //int lastFrame = 60*times.back().m2 + times.back().s2;
+    Mat mat;
+
+    while(vid.read(mat))
+    {
+        // Add this frame to each clip it belongs to
+        for(uint i = 0; i < clips.size(); ++i)
+        {
+            // Get the frame numbers for this clip
+            int start = fps * ((60*(times[i].m)) + times[i].s);
+            int end = fps * ((60*(times[i].m2)) + times[i].s2);
+
+            if(current >= start && current < end)
+            {
+                clips[i] << mat; //.clone();
+            }
+        }
+
+        ++current;
+        LOG<<"Current Frame: "<<current<<"\n";
+    }
+*/
+    /*New*/
 
     return success;
 }
