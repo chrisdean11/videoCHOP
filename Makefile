@@ -48,7 +48,7 @@ SRCS = src/Main.cpp src/VideoCHOP.cpp
 OBJS = $(SRCS:.c=.o)
 
 # define the executable file 
-MAIN = Main
+MAIN = videoCHOP
 
 #
 # The following part of the makefile is generic; it can be used to 

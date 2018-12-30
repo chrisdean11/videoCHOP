@@ -6,7 +6,7 @@
 #include "VideoCHOP.h"
 #include "LOG.h"
 
-#define FRAMESPEED 1 // Max number of pixels a cropped video can move in x or y, per frame.
+#define FRAMESPEED 2 // Max number of pixels a cropped video can move in x or y, per frame.
 
 using namespace cv;
 bool first = true;
@@ -160,17 +160,16 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
     // Make WideoWriter
     Size s = Size(width, height);
     VideoWriter cropped = VideoWriter(dest, ex, fps, s, true);
+    
+    // Go through each frame, making a new cropped frame from each boy
     Point prevLoc;
     bool firstFrame = true;
-
-    // Go through each frame, making a new cropped frame from each boy
     for(;;)
     {
         Mat mat; 
 
         if(!vid.read(mat))
         {
-            LOG << "Finished reading video frames\n";
             break;
         }
 
@@ -192,13 +191,14 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
             int moveY = loc.y - prevLoc.y;
 
             // Limit movement to FRAMESPEED
-            if (moveX > FRAMESPEED)             moveX = FRAMESPEED;
-            else if ((0 - moveX) > FRAMESPEED)  moveX = -FRAMESPEED;
-            if (moveY > FRAMESPEED)             moveY = FRAMESPEED;
-            else if ((0 - moveY) > FRAMESPEED)  moveY = -FRAMESPEED;
+            if (moveX > FRAMESPEED)         moveX = FRAMESPEED;  // moveX too far in + direction
+            else if (moveX < -FRAMESPEED)   moveX = -FRAMESPEED; // moveX too far in - direction
+            if (moveY > FRAMESPEED)         moveY = FRAMESPEED;  // moveY too far in + direction
+            else if (moveY < -FRAMESPEED)   moveY = -FRAMESPEED; // moveY too far in - direction
         
-            loc.x = loc.x + moveX;
-            loc.y = loc.y + moveY;
+            // Make move of Loc
+            loc.x = prevLoc.x + moveX;
+            loc.y = prevLoc.y + moveY;
         }
 
         // Pull back if loc goes over edge.
@@ -210,7 +210,7 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
             else if (loc.y + (height/2) > S.height) loc.y = S.height - height/2;
         }
 
-        // This is the final crop location
+        // This is the final crop location for this frame
         prevLoc = loc;
 
         // Crop to final location
@@ -295,6 +295,7 @@ bool VideoCHOP::getFrames(std::vector<Mat> &frames, const std::string &videoname
 // Returns center point of the biggest object detected after threshold.
 Point VideoCHOP::findObject(const Mat &frame)
 {
+    static bool center = false;
     Mat frame_HSV, frame_threshold;
 
     // Make thresholded image
@@ -302,8 +303,30 @@ Point VideoCHOP::findObject(const Mat &frame)
     {
         // Get HSV threshold from the first frame
         showAndSelectColor(frame);
+        LOG<<"Processing video...\n";
         first = false;
+
+        // Check if user chose no threshold.
+        if(
+            low_H == 0 &&
+            low_S == 0 &&
+            low_V == 0 &&
+            high_H == max_value_H &&
+            high_S == max_value &&
+            high_V == max_value
+            )
+        {
+            center = true;
+        }
     }
+
+    // Default to center if a threshold wasn't chosen
+    if(center)
+    {
+        return Point(frame.cols/2, frame.rows/2);   
+    }
+
+    // Convert to HSV and threshold
     cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
     inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
 
@@ -344,7 +367,6 @@ Point VideoCHOP::findObject(const Mat &frame)
                         (int)((float)mu.m01 / ((float)mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
     
     // Find center
-    //return Point(mat.cols/2, mat.rows/2);
     return mc;
 }
 
@@ -383,7 +405,6 @@ static void on_high_V_thresh_trackbar(int, void *)
 int showAndSelectColor(Mat frame)
 {
     //cap
-    namedWindow(window_capture_name);
     namedWindow(window_detection_name);
 
     // Trackbars to set thresholds for HSV values
@@ -402,14 +423,14 @@ int showAndSelectColor(Mat frame)
         // Detect the object based on HSV Range Values
         inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
         // Show the frames
-        imshow(window_capture_name, frame);
         imshow(window_detection_name, frame_threshold);
         char key = (char) waitKey(30);
-        if (key == 'q' || key == 27)
+        if (key == 'q' || key == 27 /*esc*/ || key == ' ' || key == 13 /* \r */ || key == 10 /* \n */)
         {
             break;
         }
     }
 
+    destroyWindow(window_detection_name);
     return 0;
 }
