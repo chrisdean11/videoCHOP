@@ -11,23 +11,12 @@
 using namespace cv;
 bool first = true;
 
-// Code to find threshold values from first frame taken from https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
-int showAndSelectColor(Mat frame);
-const int max_value_H = 360/2;
-const int max_value = 255;
-const String window_capture_name = "Video Capture";
-const String window_detection_name = "Object Detection";
-int low_H = 0, low_S = 0, low_V = 0;
-int high_H = max_value_H, high_S = max_value, high_V = max_value;
-
-
-
 bool VideoCHOP::chop(std::string videoname, std::string filename, std::string dest)
 {
     bool success = true;
     std::vector<timeVal> times;
 
-    if (!getTimes(filename, times))
+    if (!getTimesFromFile(filename, times))
     {
         return false;
     }
@@ -79,7 +68,10 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
     }
     /*Old */
 
-    /*New - takes 17 seconds on a 26s test clip*/
+    /*  
+        New - takes 17 seconds on a 26s test clip. 
+        It should be much faster with a larger video or more clips
+    */
 
     /*
      * Make clips
@@ -224,7 +216,7 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
 }
 
 // File is a list of pairs of times. Each line is: "m:s m2:s2"
-bool VideoCHOP::getTimes(std::string filename, std::vector<timeVal> &times)
+bool VideoCHOP::getTimesFromFile(std::string filename, std::vector<timeVal> &times)
 {
     bool success = true;
     std::ifstream file;
@@ -255,13 +247,13 @@ bool VideoCHOP::getTimes(std::string filename, std::vector<timeVal> &times)
         LOG << time.toString()<<"\n";
     } 
 
-    LOG<<"leaving getTimes()\n";
+    LOG<<"leaving getTimesFromFile()\n";
 
     return success;
 }
 
 // Copy video into vector of matrices. Explodes memory usage and is great for crashing your machine.
-bool VideoCHOP::getFrames(std::vector<Mat> &frames, const std::string &videoname, int &codec, double &fps, Size &size)
+bool VideoCHOP::getAllFramesFromVideo(std::vector<Mat> &frames, const std::string &videoname, int &codec, double &fps, Size &size)
 {
     VideoCapture vid = VideoCapture(videoname);
 
@@ -345,12 +337,6 @@ Point VideoCHOP::findObject(const Mat &frame)
     {
         int area = contourArea(contours[i]); // Vector of points 
 
-        //for(auto pt : contours[i])
-        //{
-        //    ++mass;
-        //}
-        ////try{}catch(zerodivisionerror)
-
         if(area > biggestArea)
         {
             biggestArea = area;
@@ -359,10 +345,6 @@ Point VideoCHOP::findObject(const Mat &frame)
     }
 
     Moments mu = moments(contours[biggestIndex]);
-
-    //Point2f mc = Point2f(   static_cast<float>(mu.m10 / (mu.m00 + 1e-5)), 
-    //                        static_cast<float>(mu.m01 / (mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
-
     Point mc = Point( (int)((float)mu.m10 / ((float)mu.m00 + 1e-5)) , 
                         (int)((float)mu.m01 / ((float)mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
     
@@ -370,7 +352,13 @@ Point VideoCHOP::findObject(const Mat &frame)
     return mc;
 }
 
-// TODO fix this nonsense to not use globals. Make it one function.
+
+/*
+    Code below was taken from https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
+    No point in doing it myself.
+*/
+
+// Callbacks for showAndSelectColor() trackbar
 static void on_low_H_thresh_trackbar(int, void *)
 {
     low_H = min(high_H-1, low_H);

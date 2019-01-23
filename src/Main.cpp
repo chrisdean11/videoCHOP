@@ -1,5 +1,5 @@
 /*
-    Sample program from https://docs.opencv.org/4.0.0/db/df5/tutorial_linux_gcc_cmake.html
+    Sample program demonstrating how the VideoCHOP class is used.
 */
 
 #include <stdio.h>

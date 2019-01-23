@@ -37,7 +37,18 @@ private:
         }
     };
 
-    bool getTimes(std::string filename, std::vector<timeVal> &times);
-    bool getFrames(std::vector<cv::Mat> &frames, const std::string &videoname, int &codec, double &fps, cv::Size &size);
+    bool getTimesFromFile(std::string filename, std::vector<timeVal> &times);
+    bool getAllFramesFromVideo(std::vector<cv::Mat> &frames, const std::string &videoname, int &codec, double &fps, cv::Size &size);
     cv::Point findObject(const cv::Mat &mat);
+    
+    // Code taken from https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
+    // I should just make it its own class
+    const int max_value_H = 360/2;
+    const int max_value = 255;
+    const String window_capture_name = "Video Capture";
+    const String window_detection_name = "Object Detection";
+    int low_H = 0, low_S = 0, low_V = 0;
+    int high_H = max_value_H, high_S = max_value, high_V = max_value;
+    int showAndSelectColor(Mat frame);
+
 };
