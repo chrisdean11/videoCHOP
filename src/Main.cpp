@@ -13,18 +13,25 @@ int main(int argc, char** argv )
     VideoCHOP vc;
 
     // Parse arguments
-    if(argc == 6 && std::string(argv[1]).compare("crop") == 0) // CROP
+    if(argc >= 6 && std::string(argv[1]).compare("crop") == 0) // CROP
     {
         std::string srcFile = std::string(argv[2]);
         std::string dstFile = std::string(argv[3]);
-        std::stringstream w,h;
-        int width, height;
+        std::stringstream w,h, s;
+        int width, height; 
+        int speed = 1;
         w << argv[4];
         h << argv[5];
         w >> width;
         h >> height;
 
-        if (!vc.crop(srcFile, width, height, dstFile))
+        if (argc > 6)
+        {
+            s << argv[6];
+            s >> speed;
+        }
+
+        if (!vc.crop(srcFile, width, height, dstFile, speed))
         {
             return 1;
         }

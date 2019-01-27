@@ -6,10 +6,15 @@
 #include "VideoCHOP.h"
 #include "LOG.h"
 
-#define FRAMESPEED 2 // Max number of pixels a cropped video can move in x or y, per frame.
-
 using namespace cv;
 bool first = true;
+
+static const int max_value_H = 360/2;
+static const int max_value = 255;
+static const std::string window_capture_name = "Video Capture";
+static const std::string window_detection_name = "Object Detection";
+static int low_H = 0, low_S = 0, low_V = 0;
+static int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
 bool VideoCHOP::chop(std::string videoname, std::string filename, std::string dest)
 {
@@ -134,7 +139,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 }
 
 // Make a new video by cropping a source video while following a chosen object
-bool VideoCHOP::crop(std::string videoname, int width, int height, std::string dest)
+bool VideoCHOP::crop(std::string videoname, int width, int height, std::string dest, int frameSpeed)
 {
     VideoCapture vid = VideoCapture(videoname);
 
@@ -182,11 +187,11 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
             int moveX = loc.x - prevLoc.x; // If prevLoc needs to move negative, this will be negative
             int moveY = loc.y - prevLoc.y;
 
-            // Limit movement to FRAMESPEED
-            if (moveX > FRAMESPEED)         moveX = FRAMESPEED;  // moveX too far in + direction
-            else if (moveX < -FRAMESPEED)   moveX = -FRAMESPEED; // moveX too far in - direction
-            if (moveY > FRAMESPEED)         moveY = FRAMESPEED;  // moveY too far in + direction
-            else if (moveY < -FRAMESPEED)   moveY = -FRAMESPEED; // moveY too far in - direction
+            // Limit movement to frameSpeed
+            if (moveX > frameSpeed)         moveX = frameSpeed;  // moveX too far in + direction
+            else if (moveX < -frameSpeed)   moveX = -frameSpeed; // moveX too far in - direction
+            if (moveY > frameSpeed)         moveY = frameSpeed;  // moveY too far in + direction
+            else if (moveY < -frameSpeed)   moveY = -frameSpeed; // moveY too far in - direction
         
             // Make move of Loc
             loc.x = prevLoc.x + moveX;
@@ -355,6 +360,7 @@ Point VideoCHOP::findObject(const Mat &frame)
 
 /*
     Code below was taken from https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
+    It controls the user's color selection and saves the hsv high and low values.
     No point in doing it myself.
 */
 
@@ -390,7 +396,7 @@ static void on_high_V_thresh_trackbar(int, void *)
     setTrackbarPos("High V", window_detection_name, high_V);
 }
 
-int showAndSelectColor(Mat frame)
+int VideoCHOP::showAndSelectColor(Mat frame)
 {
     //cap
     namedWindow(window_detection_name);

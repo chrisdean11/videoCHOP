@@ -19,7 +19,7 @@ class VideoCHOP
 public:
     VideoCHOP() {}
     bool chop(std::string video, std::string filename, std::string dest);
-    bool crop(std::string video, int width, int height, std::string dest);
+    bool crop(std::string video, int width, int height, std::string dest, int speed);
 
 private:
     struct timeVal
@@ -43,12 +43,19 @@ private:
     
     // Code taken from https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
     // I should just make it its own class
-    const int max_value_H = 360/2;
-    const int max_value = 255;
-    const String window_capture_name = "Video Capture";
-    const String window_detection_name = "Object Detection";
-    int low_H = 0, low_S = 0, low_V = 0;
-    int high_H = max_value_H, high_S = max_value, high_V = max_value;
-    int showAndSelectColor(Mat frame);
+    //static const int max_value_H = 360/2;
+    //static const int max_value = 255;
+    //static const std::string window_capture_name = "Video Capture";
+    //static const std::string window_detection_name = "Object Detection";
+    //static int low_H = 0, low_S = 0, low_V = 0;
+    //static int high_H = max_value_H, high_S = max_value, high_V = max_value;
+    //// Callbacks for showAndSelectColor() trackbar
+    //static void on_low_H_thresh_trackbar(int, void *);
+    //static void on_high_H_thresh_trackbar(int, void *);
+    //static void on_low_S_thresh_trackbar(int, void *);
+    //static void on_high_S_thresh_trackbar(int, void *);
+    //static void on_low_V_thresh_trackbar(int, void *);
+    //static void on_high_V_thresh_trackbar(int, void *);
+    int showAndSelectColor(cv::Mat frame);
 
 };
