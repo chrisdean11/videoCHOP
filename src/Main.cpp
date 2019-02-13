@@ -17,9 +17,11 @@ int main(int argc, char** argv )
     {
         std::string srcFile = std::string(argv[2]);
         std::string dstFile = std::string(argv[3]);
-        std::stringstream w,h, s;
+        std::string method = "mosse";
         int width, height; 
         int speed = 1;
+
+        std::stringstream w, h, s;
         w << argv[4];
         h << argv[5];
         w >> width;
@@ -31,7 +33,12 @@ int main(int argc, char** argv )
             s >> speed;
         }
 
-        if (!vc.crop(srcFile, width, height, dstFile, speed))
+        if (argc > 7)
+        {
+            method = std::string(argv[7]);
+        }
+
+        if (!vc.crop(srcFile, width, height, dstFile, speed, method))
         {
             return 1;
         }
@@ -49,8 +56,8 @@ int main(int argc, char** argv )
     }
     else
     {
-        LOG << "Usage: ./ProgramName chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n";
-        LOG << "Usage: ./ProgramName crop /path/to/filename.mp4 /path/to/destfile.mp4 width height\n";
+        LOG << "Usage: ./videoCHOP chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n";
+        LOG << "Usage: ./videoCHOP crop /path/to/filename.mp4 /path/to/destfile.mp4 width height [speed] [method]\n";
         return 1;
     }
 

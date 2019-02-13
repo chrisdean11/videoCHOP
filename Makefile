@@ -32,7 +32,9 @@ LIBS = 	-lopencv_core 		\
 		-lopencv_highgui	\
 		-lopencv_imgproc	\
 		-lopencv_imgcodecs	\
-		-lopencv_videoio
+		-lopencv_videoio	\
+		-lopencv_tracking
+		# locate libopencv_ to see all of these, and what folders they reside in
 
 # define the C source files
 SRCS = src/Main.cpp src/VideoCHOP.cpp

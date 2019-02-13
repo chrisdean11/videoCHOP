@@ -3,18 +3,17 @@
 
 */
 #include <fstream>
+#include <strings.h>
 #include "VideoCHOP.h"
+#include "SelectHSV.h"
 #include "LOG.h"
+
+#include <opencv2/opencv.hpp>
+#include <opencv2/tracking.hpp>
+#include <opencv2/core/ocl.hpp>
 
 using namespace cv;
 bool first = true;
-
-static const int max_value_H = 360/2;
-static const int max_value = 255;
-static const std::string window_capture_name = "Video Capture";
-static const std::string window_detection_name = "Object Detection";
-static int low_H = 0, low_S = 0, low_V = 0;
-static int high_H = max_value_H, high_S = max_value, high_V = max_value;
 
 bool VideoCHOP::chop(std::string videoname, std::string filename, std::string dest)
 {
@@ -37,8 +36,6 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
     {
         ++clipnum;
         VideoCapture vid = VideoCapture(videoname);
-
-        // TODO: get file extension of destination and apply it to source
 
         // Make the new clip's name
         std::stringstream ss;
@@ -75,7 +72,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 
     /*  
         New - takes 17 seconds on a 26s test clip. 
-        It should be much faster with a larger video or more clips
+        It should be much faster than the old method with a larger video or more clips
     */
 
     /*
@@ -139,9 +136,10 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 }
 
 // Make a new video by cropping a source video while following a chosen object
-bool VideoCHOP::crop(std::string videoname, int width, int height, std::string dest, int frameSpeed)
+bool VideoCHOP::crop(std::string videoname, int width, int height, std::string dest, int frameSpeed = 1, std::string trackMethod)
 {
     VideoCapture vid = VideoCapture(videoname);
+    method = trackMethod;
 
     if (!vid.isOpened())
     {
@@ -157,7 +155,7 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
     // Make WideoWriter
     Size s = Size(width, height);
     VideoWriter cropped = VideoWriter(dest, ex, fps, s, true);
-    
+
     // Go through each frame, making a new cropped frame from each boy
     Point prevLoc;
     bool firstFrame = true;
@@ -175,6 +173,10 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
         // Obtain location
         Point loc = findObject(mat);
         if(loc.x == -1) loc = prevLoc;
+
+#if 0 // Troubleshoot motion tracking - show the tracked object
+        circle(mat, loc, 5, Scalar( 0, 255, 255 ), -1);
+#endif
 
         // Reconcile loc with previous frame location
         if (firstFrame)
@@ -209,6 +211,10 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
 
         // This is the final crop location for this frame
         prevLoc = loc;
+
+#if 0 // Troubleshoot motion tracking - show the final center location
+        circle(mat, loc, 5, Scalar( 255, 0, 255 ), -1);
+#endif
 
         // Crop to final location
         mat2 = Mat(mat, Range((loc.y - s.height/2), (loc.y + s.height/2)), Range((loc.x - s.width/2), (loc.x + s.width/2)));
@@ -292,139 +298,144 @@ bool VideoCHOP::getAllFramesFromVideo(std::vector<Mat> &frames, const std::strin
 // Returns center point of the biggest object detected after threshold.
 Point VideoCHOP::findObject(const Mat &frame)
 {
-    static bool center = false;
-    Mat frame_HSV, frame_threshold;
+    // TODO just make data members out of these static and globals
+    static bool stayCenter = false;
+    static Rect2d rect;
+    static Ptr<Tracker> tracker;
 
-    // Make thresholded image
+    // Make threshold/tracker
     if(first)
     {
-        // Get HSV threshold from the first frame
-        showAndSelectColor(frame);
-        LOG<<"Processing video...\n";
         first = false;
-
-        // Check if user chose no threshold.
-        if(
-            low_H == 0 &&
-            low_S == 0 &&
-            low_V == 0 &&
-            high_H == max_value_H &&
-            high_S == max_value &&
-            high_V == max_value
-            )
+        LOG<<"Processing video...\n";
+        
+        if (strcasecmp(method.c_str(), "COLOR") == 0)
         {
-            center = true;
+            // Get HSV threshold from the first frame
+            if(SelectHSV::showAndSelectColor(frame) == 0)
+            {
+                stayCenter = true;
+            }
+        } 
+        else // tracker
+        {
+            if (strcasecmp(method.c_str(), "BOOSTING") == 0)
+            {
+                tracker = TrackerBoosting::create();
+            }
+            else if (strcasecmp(method.c_str(), "MIL") == 0)
+            {
+                tracker = TrackerMIL::create();
+            }
+            else if (strcasecmp(method.c_str(), "KCF") == 0)
+            {
+                tracker = TrackerKCF::create();
+            }
+            else if (strcasecmp(method.c_str(), "TLD") == 0)
+            {
+                tracker = TrackerTLD::create();
+            }
+            else if (strcasecmp(method.c_str(), "MEDIANFLOW") == 0)
+            {
+                tracker = TrackerMedianFlow::create();
+            }
+            else if (strcasecmp(method.c_str(), "GOTURN") == 0)
+            {
+                tracker = TrackerGOTURN::create();
+            }
+            else if (strcasecmp(method.c_str(), "MOSSE") == 0)
+            {
+                tracker = TrackerMOSSE::create();
+            }
+            else if (strcasecmp(method.c_str(), "CSRT") == 0)
+            {
+                tracker = TrackerCSRT::create();
+            }
+            else
+            {
+                LOG << "Invalid tracker type chosen: " << method << "\n";
+                stayCenter = true;
+                return Point(frame.cols/2, frame.rows/2);   
+            }
+
+            bool fromCenter = false;
+            rect = selectROI(frame, fromCenter); 
+
+            bool ok = tracker->init(frame, rect);
+
+            if (ok)
+            {
+                LOG<<"Rect is:" << rect << "with center " << (rect.br() + rect.tl())*0.5 << "\n";
+            }
+            else
+            {
+                // sucks
+                LOG << "Tracking failure\n";
+            }
+
+            return (rect.br() + rect.tl())*0.5;
         }
     }
 
-    // Default to center if a threshold wasn't chosen
-    if(center)
+    // Default to center if a threshold/tracker wasn't chosen
+    if(stayCenter)
     {
         return Point(frame.cols/2, frame.rows/2);   
     }
 
-    // Convert to HSV and threshold
-    cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
-    inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
-
-    // Process thresholded image, remove any small spots etc
-    // ...
-
-    // Detect the object based on HSV Range Values
-    std::vector<std::vector<Point>> contours;
-    Mat contourOutput = frame_threshold.clone();
-    findContours(contourOutput, contours,  RETR_LIST, CHAIN_APPROX_NONE);
-
-    // Find the biggest object
-    int biggestIndex;
-    int biggestArea = 0;
-    for(size_t i = 0; i < contours.size(); i++)
+    if (method == "COLOR")
     {
-        int area = contourArea(contours[i]); // Vector of points 
-
-        if(area > biggestArea)
-        {
-            biggestArea = area;
-            biggestIndex = i;
-        }
-    }
-
-    Moments mu = moments(contours[biggestIndex]);
-    Point mc = Point( (int)((float)mu.m10 / ((float)mu.m00 + 1e-5)) , 
-                        (int)((float)mu.m01 / ((float)mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
-    
-    // Find center
-    return mc;
-}
-
-
-/*
-    Code below was taken from https://docs.opencv.org/3.4/da/d97/tutorial_threshold_inRange.html
-    It controls the user's color selection and saves the hsv high and low values.
-    No point in doing it myself.
-*/
-
-// Callbacks for showAndSelectColor() trackbar
-static void on_low_H_thresh_trackbar(int, void *)
-{
-    low_H = min(high_H-1, low_H);
-    setTrackbarPos("Low H", window_detection_name, low_H);
-}
-static void on_high_H_thresh_trackbar(int, void *)
-{
-    high_H = max(high_H, low_H+1);
-    setTrackbarPos("High H", window_detection_name, high_H);
-}
-static void on_low_S_thresh_trackbar(int, void *)
-{
-    low_S = min(high_S-1, low_S);
-    setTrackbarPos("Low S", window_detection_name, low_S);
-}
-static void on_high_S_thresh_trackbar(int, void *)
-{
-    high_S = max(high_S, low_S+1);
-    setTrackbarPos("High S", window_detection_name, high_S);
-}
-static void on_low_V_thresh_trackbar(int, void *)
-{
-    low_V = min(high_V-1, low_V);
-    setTrackbarPos("Low V", window_detection_name, low_V);
-}
-static void on_high_V_thresh_trackbar(int, void *)
-{
-    high_V = max(high_V, low_V+1);
-    setTrackbarPos("High V", window_detection_name, high_V);
-}
-
-int VideoCHOP::showAndSelectColor(Mat frame)
-{
-    //cap
-    namedWindow(window_detection_name);
-
-    // Trackbars to set thresholds for HSV values
-    createTrackbar("Low H", window_detection_name, &low_H, max_value_H, on_low_H_thresh_trackbar);
-    createTrackbar("High H", window_detection_name, &high_H, max_value_H, on_high_H_thresh_trackbar);
-    createTrackbar("Low S", window_detection_name, &low_S, max_value, on_low_S_thresh_trackbar);
-    createTrackbar("High S", window_detection_name, &high_S, max_value, on_high_S_thresh_trackbar);
-    createTrackbar("Low V", window_detection_name, &low_V, max_value, on_low_V_thresh_trackbar);
-    createTrackbar("High V", window_detection_name, &high_V, max_value, on_high_V_thresh_trackbar);
-    Mat frame_HSV, frame_threshold;
-
-    while (true) 
-    {
-        // Convert from BGR to HSV colorspace
+        // Convert to HSV and threshold
+        Mat frame_HSV, frame_threshold;
         cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
+        inRange(frame_HSV, 
+                Scalar(SelectHSV::low_H, SelectHSV::low_S, SelectHSV::low_V), 
+                Scalar(SelectHSV::high_H, SelectHSV::high_S, SelectHSV::high_V), 
+                frame_threshold);
+    
+        // Process thresholded image, remove any small spots etc
+        // ...
+    
         // Detect the object based on HSV Range Values
-        inRange(frame_HSV, Scalar(low_H, low_S, low_V), Scalar(high_H, high_S, high_V), frame_threshold);
-        // Show the frames
-        imshow(window_detection_name, frame_threshold);
-        char key = (char) waitKey(30);
-        if (key == 'q' || key == 27 /*esc*/ || key == ' ' || key == 13 /* \r */ || key == 10 /* \n */)
+        std::vector<std::vector<Point>> contours;
+        Mat contourOutput = frame_threshold.clone();
+        findContours(contourOutput, contours, RETR_LIST, CHAIN_APPROX_NONE);
+    
+        // Find the biggest object
+        int biggestIndex;
+        int biggestArea = 0;
+        for(size_t i = 0; i < contours.size(); i++)
         {
-            break;
+            int area = contourArea(contours[i]); // Vector of points 
+    
+            if(area > biggestArea)
+            {
+                biggestArea = area;
+                biggestIndex = i;
+            }
         }
-    }
+    
+        // Find center
+        Moments mu = moments(contours[biggestIndex]);
+        Point mc = Point( (int)((float)mu.m10 / ((float)mu.m00 + 1e-5)) , 
+                            (int)((float)mu.m01 / ((float)mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
 
-    destroyWindow(window_detection_name);
-    return 0;
+        LOG<<"Center is " << mc << "\n";
+        return mc;
+    }
+    else // tracker
+    {
+        bool ok = tracker->update(frame, rect);
+
+        if (ok)
+        {
+            LOG<<"Rect is:" << rect << "with center " << (rect.tl() + rect.br())*0.5 << "\n";
+        }
+        else
+        {
+            LOG<<"Tracking failure\n";
+        }
+
+        return (rect.br() + rect.tl())*0.5;
+    }
 }

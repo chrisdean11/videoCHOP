@@ -1,1 +1,56 @@
-This directory is a simple opencv4 build setup.  Might help get small projects started quickly.
+This project is just playing with video editing and object tracking. 
+The makefile is a reusable opencv4 build setup. Might help get small projects started quickly.
+
+Tracker descriptions, examples and algorithm comparisions were summarized from:
+https://www.pyimagesearch.com/2018/07/30/opencv-object-tracking/
+https://www.learnopencv.com/object-tracking-using-opencv-cpp-python/
+
+BOOSTING 
+    AdaBoost (Haar cascades) 
+    More than a decade old, slow, not great accuracy.
+    Trains at runtime with positive and negative examples
+    Failure not reported well
+
+MIL 
+    Multiple Instance Learning
+    Similar to BOOSTING.
+    Considers neighborhood of background regions to center object better.
+    Failure not reported well.
+
+KCF 
+    Kernelized Correlation Filters
+    Builds on BOOSTING and MIL, but considers overlapping data between positives.
+    More sophisticated math makes it more accurate and better failure reporting than before.
+    Recommended for faster compute, and good accuracy but less than CSRT.
+
+TLD 
+    Tracking, learning and detection
+    Tries to correct for tracker's errors and updates it to avoid those errors in the future
+    Deals well with occlusion
+    Prone to false positives
+
+MEDIANFLOW
+    Tracks object both forward and backward in time and measures discrepancies between their motion trajectories.
+    Best when motion is predictable and small and follows a trajectory.
+    Reports faiures well. 
+    Doesn't handle fast jumps in motion well.
+
+GOTURN 
+    CNN-based.
+    Caffe model for tracking
+    “Robust to viewpoint changes, lighting changes, and deformations”. 
+    Does not handle occlusion very well.
+    Needs additional model files to run.
+
+MOSSE 
+    Minimum Output Sum of Squared Error
+    Uses adaptive correlation for object tracking which produces stable correlation filters when initialized using a single frame. 
+    Robust to variations in lighting, scale, pose, and non-rigid deformations.
+    Detects occlusion and picks up when the object reappears.
+    Recommended for pure speed
+
+CSRT 
+    Discriminative Correlation Filter with Channel and Spatial Reliability (DCF-CSR)
+    Uses spatial reliability map for adjusting the filter support to the part of the selected region from the frame for tracking
+    Improved tracking of the non-rectangular regions or objects.
+    Recommended for higher accuracy, slower compute.
