@@ -56,7 +56,7 @@ int main(int argc, char** argv )
     }
     else
     {
-        LOG << "Usage: ./videoCHOP chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n";
+        Log::Log(": ./videoCHOP chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n");
         LOG << "Usage: ./videoCHOP crop /path/to/filename.mp4 /path/to/destfile.mp4 width height [speed] [method]\n";
         return 1;
     }

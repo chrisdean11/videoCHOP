@@ -1,38 +1,35 @@
 /* 
     Log function.
 */
+
+#ifndef LOG_H
+#define LOG_H
+
 #include <iostream> 
 
 #define LOG std::cerr
 
-// Above is useless so I'm going to complete its original goal, which I'll eventually finish:
+enum class LogLevel
+{
+    debug,
+    info,
+    error
+};
+
+// Above is useless so I'm going to complete its original goal eventually:
 namespace Log
 {
+    extern bool logToFile;
+    extern std::string filename;
 
-void Log(/*vars*/)
-{
-    (*logger)(/*vars*/);
+    void Log(const char *fmt, ...) __attribute__((format (printf, 1, 2)));
+        
+    void Log(LogLevel level, const char *fmt, ...) __attribute__((format (printf, 2, 3)));
+
+    void logFile(const std::string &fn);
 }
 
-void cerrLog()
-{
-
-}
-
-void fileLog()
-{
-
-}
-
-void initialize(std::string file)
-{
-    filename = file;
-}
-
-static std::string filename;
-static void (*logger)(/*vars*/) = cerrLog;
-
-}
+#endif // LOG_H
 
 /*  
     Going for something like this solution:
