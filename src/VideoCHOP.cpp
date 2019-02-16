@@ -44,7 +44,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 
         if (!vid.isOpened())
         {
-            LOG << "Error: " << videoname << " not opened successfully on making " << clipname << "\n";
+            Log::Log("Error: %s not opened successfully while making %s\n", videoname.c_str(), clipname.c_str());
             success = false;
             break;
         }
@@ -83,7 +83,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 
     if (!vid.isOpened())
     {
-        LOG << "Error: " << videoname << " not opened successfully\n";
+        Log::Log("Error: %s not opened successfully\n", videoname.c_str());
         return false;
     }
 
@@ -127,7 +127,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
         }
 
         ++current;
-        LOG<<"Current Frame: "<<current<<"\n";
+        Log::Log("Current Frame: %d\n", current);
     }
 */
     /*New*/
@@ -143,7 +143,7 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
 
     if (!vid.isOpened())
     {
-        LOG << "Error: " << videoname << " not opened successfully.\n";
+        Log::Log("Error: %s not opened successfully.\n", videoname.c_str());
         return false;
     }
 
@@ -242,23 +242,23 @@ bool VideoCHOP::getTimesFromFile(std::string filename, std::vector<timeVal> &tim
 
         if ( !(iss >> tv.m >> c >> tv.s >> tv.m2 >> c2 >> tv.s2 ) ) 
         {
-            LOG << "ERROR: " << c << c2 << " " << tv.toString();
+            Log::Log("ERROR: %c %c %s", c, c2, tv.toString().c_str());
             success = false;
             break;
         }
         
-        LOG << "Clip: " << tv.toString();
+        Log::Log("Clip: %s", tv.toString().c_str());
         times.push_back(tv);
     }
 
-    LOG << "times: \n";
+    Log::Log("times: \n");
 
     for (auto time : times)
     {
-        LOG << time.toString()<<"\n";
+        Log::Log("%s\n", time.toString().c_str());
     } 
 
-    LOG<<"leaving getTimesFromFile()\n";
+    Log::Log("leaving getTimesFromFile()\n");
 
     return success;
 }
@@ -270,7 +270,7 @@ bool VideoCHOP::getAllFramesFromVideo(std::vector<Mat> &frames, const std::strin
 
     if (!vid.isOpened())
     {
-        LOG << "Error: " << videoname << " not opened successfully.\n";
+        Log::Log("Error: %s not opened successfully.\n", videoname.c_str());
         return false;
     }
 
@@ -285,7 +285,7 @@ bool VideoCHOP::getAllFramesFromVideo(std::vector<Mat> &frames, const std::strin
 
         if(!vid.read(mat))
         {
-            LOG << "Finished reading video frames\n";
+            Log::Log("Finished reading video frames\n");
             break;
         }
 
@@ -307,7 +307,7 @@ Point VideoCHOP::findObject(const Mat &frame)
     if(first)
     {
         first = false;
-        LOG<<"Processing video...\n";
+        Log::Log("Processing video...\n");
         
         if (strcasecmp(method.c_str(), "COLOR") == 0)
         {
@@ -353,7 +353,7 @@ Point VideoCHOP::findObject(const Mat &frame)
             }
             else
             {
-                LOG << "Invalid tracker type chosen: " << method << "\n";
+                Log::Log("Invalid tracker type chosen: %s\n", method.c_str());
                 stayCenter = true;
                 return Point(frame.cols/2, frame.rows/2);   
             }
@@ -365,12 +365,12 @@ Point VideoCHOP::findObject(const Mat &frame)
 
             if (ok)
             {
-                LOG<<"Rect is:" << rect << "with center " << (rect.br() + rect.tl())*0.5 << "\n";
+                Log::Log("Rect is:(%.0f,%.0f) to (%.0f,%.0f) with center (%.0f,%.0f)\n", rect.tl().x, rect.tl().y, rect.br().x, rect.br().y, ((rect.br() + rect.tl())*0.5).x, ((rect.br() + rect.tl())*0.5).y);
             }
             else
             {
                 // sucks
-                LOG << "Tracking failure\n";
+                Log::Log("Tracking failure\n");
             }
 
             return (rect.br() + rect.tl())*0.5;
@@ -420,7 +420,7 @@ Point VideoCHOP::findObject(const Mat &frame)
         Point mc = Point( (int)((float)mu.m10 / ((float)mu.m00 + 1e-5)) , 
                             (int)((float)mu.m01 / ((float)mu.m00 + 1e-5)) ); //add 1e-5 to avoid division by zero
 
-        LOG<<"Center is " << mc << "\n";
+        Log::Log("Center is (%d,%d)\n", mc.x, mc.y);
         return mc;
     }
     else // tracker
@@ -429,11 +429,11 @@ Point VideoCHOP::findObject(const Mat &frame)
 
         if (ok)
         {
-            LOG<<"Rect is:" << rect << "with center " << (rect.tl() + rect.br())*0.5 << "\n";
+            Log::Log("Rect is:(%.0f,%.0f) to (%.0f,%.0f) with center (%.0f,%.0f)\n", rect.tl().x, rect.tl().y, rect.br().x, rect.br().y, ((rect.br() + rect.tl())*0.5).x, ((rect.br() + rect.tl())*0.5).y);
         }
         else
         {
-            LOG<<"Tracking failure\n";
+            Log::Log("Tracking failure\n");
         }
 
         return (rect.br() + rect.tl())*0.5;

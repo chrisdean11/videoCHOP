@@ -12,6 +12,7 @@ namespace Log
     bool logToFile = false;
     std::string filename;
 
+    // The private log function that the rest of them ultimately use
     void _Log(LogLevel level, const char *fmt, va_list args)
     {
         if (level == LogLevel::debug) ; // Do something with log levels eventually
@@ -48,7 +49,8 @@ namespace Log
     
     void logFile(const std::string &fn)
     {
-        filename = fn;        
+        filename = fn;
+        logToFile = true;
     }
 }
 
