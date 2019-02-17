@@ -18,7 +18,7 @@ class VideoCHOP
 public:
     VideoCHOP() {}
     bool chop(std::string video, std::string filename, std::string dest);
-    bool crop(std::string video, int width, int height, std::string dest, int speed, std::string method = "mosse");
+    bool crop(std::string video, int width, int height, std::string dest, int speed = 1, std::string method = "mosse", bool dots = false);
 
     std::string method;
 

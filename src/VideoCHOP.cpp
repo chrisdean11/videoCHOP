@@ -6,7 +6,7 @@
 #include <strings.h>
 #include "VideoCHOP.h"
 #include "SelectHSV.h"
-#include "LOG.h"
+#include "Log.h"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/tracking.hpp>
@@ -136,7 +136,7 @@ bool VideoCHOP::chop(std::string videoname, std::string filename, std::string de
 }
 
 // Make a new video by cropping a source video while following a chosen object
-bool VideoCHOP::crop(std::string videoname, int width, int height, std::string dest, int frameSpeed = 1, std::string trackMethod)
+bool VideoCHOP::crop(std::string videoname, int width, int height, std::string dest, int frameSpeed, std::string trackMethod, bool dots)
 {
     VideoCapture vid = VideoCapture(videoname);
     method = trackMethod;
@@ -173,10 +173,12 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
         // Obtain location
         Point loc = findObject(mat);
         if(loc.x == -1) loc = prevLoc;
-
-#if 0 // Troubleshoot motion tracking - show the tracked object
-        circle(mat, loc, 5, Scalar( 0, 255, 255 ), -1);
-#endif
+        
+        if (dots)
+        {
+            // Show the tracked object
+            circle(mat, loc, 5, Scalar( 0, 255, 255 ), -1); 
+        }
 
         // Reconcile loc with previous frame location
         if (firstFrame)
@@ -212,9 +214,11 @@ bool VideoCHOP::crop(std::string videoname, int width, int height, std::string d
         // This is the final crop location for this frame
         prevLoc = loc;
 
-#if 0 // Troubleshoot motion tracking - show the final center location
-        circle(mat, loc, 5, Scalar( 255, 0, 255 ), -1);
-#endif
+        if (dots)
+        {
+            // Show the final center location
+            circle(mat, loc, 5, Scalar( 255, 0, 255 ), -1); 
+        }
 
         // Crop to final location
         mat2 = Mat(mat, Range((loc.y - s.height/2), (loc.y + s.height/2)), Range((loc.x - s.width/2), (loc.x + s.width/2)));
@@ -383,14 +387,18 @@ Point VideoCHOP::findObject(const Mat &frame)
         return Point(frame.cols/2, frame.rows/2);   
     }
 
-    if (method == "COLOR")
+    if (strcasecmp(method.c_str(), "COLOR") == 0)
     {
         // Convert to HSV and threshold
         Mat frame_HSV, frame_threshold;
         cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
+
+        Log::Log("Threshold: ");
+        Log::Log("H:%d-%d S:%d-%d V:%d-%d\n", SelectHSV::getLH(), SelectHSV::getHH(), SelectHSV::getLS(), SelectHSV::getHS(), SelectHSV::getLV(), SelectHSV::getHV());
+
         inRange(frame_HSV, 
-                Scalar(SelectHSV::low_H, SelectHSV::low_S, SelectHSV::low_V), 
-                Scalar(SelectHSV::high_H, SelectHSV::high_S, SelectHSV::high_V), 
+                Scalar(SelectHSV::getLH(), SelectHSV::getLS(), SelectHSV::getLV()), 
+                Scalar(SelectHSV::getHH(), SelectHSV::getHS(), SelectHSV::getHV()), 
                 frame_threshold);
     
         // Process thresholded image, remove any small spots etc

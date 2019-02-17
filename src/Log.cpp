@@ -1,7 +1,7 @@
 /* 
     Log function.
 */
-#include "LOG.h"
+#include "Log.h"
 #include <iostream> 
 #include <stdarg.h>
 

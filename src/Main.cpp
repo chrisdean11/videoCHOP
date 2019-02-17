@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "LOG.h"
+#include "Log.h"
 #include "VideoCHOP.h"
 
 int main(int argc, char** argv )
@@ -20,6 +20,7 @@ int main(int argc, char** argv )
         std::string method = "mosse";
         int width, height; 
         int speed = 1;
+        bool dots = false;
 
         std::stringstream w, h, s;
         w << argv[4];
@@ -38,7 +39,15 @@ int main(int argc, char** argv )
             method = std::string(argv[7]);
         }
 
-        if (!vc.crop(srcFile, width, height, dstFile, speed, method))
+        if (argc > 8)
+        {
+            if (strcasecmp(argv[8],"on") == 0 || strcasecmp(argv[8],"1") == 0 || strcasecmp(argv[8],"true") == 0 )
+            {
+                dots = true;
+            }
+        }
+
+        if (!vc.crop(srcFile, width, height, dstFile, speed, method, dots))
         {
             return 1;
         }
@@ -57,7 +66,7 @@ int main(int argc, char** argv )
     else
     {
         Log::Log("Usage: ./videoCHOP chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n");
-        Log::Log("Usage: ./videoCHOP crop /path/to/filename.mp4 /path/to/destfile.mp4 width height [speed] [method]\n");
+        Log::Log("Usage: ./videoCHOP crop /path/to/filename.mp4 /path/to/destfile.mp4 width height [speed] [method] [dots]\n");
         return 1;
     }
 

@@ -1,3 +1,5 @@
+#include "Log.h"
+
 #include <opencv2/core.hpp>     // Basic OpenCV structures (cv::Mat, Scalar)
 #include <opencv2/imgproc.hpp>  // Gaussian Blur
 #include <opencv2/highgui.hpp>  // OpenCV window I/O
@@ -28,6 +30,13 @@ static int high_H = max_value_H, high_S = max_value, high_V = max_value;
 // {
 //     return a>b?a:b;
 // }
+
+int getLH() {return low_H;}
+int getHH() {return high_H;}
+int getLS() {return low_S;}
+int getHS() {return high_S;}
+int getLV() {return low_V;}
+int getHV() {return high_V;}
 
     // Callbacks for showAndSelectColor() trackbar
 static void on_low_H_thresh_trackbar(int, void *)
@@ -63,7 +72,7 @@ static void on_high_V_thresh_trackbar(int, void *)
 
 int showAndSelectColor(cv::Mat frame)
 {
-std::cerr<<"entering showAndSelectColor\n";
+    Log::Log("entering showAndSelectColor\n");
     //cap
     cv::namedWindow(window_detection_name);
 
@@ -93,7 +102,8 @@ std::cerr<<"entering showAndSelectColor\n";
 
     cv::destroyWindow(window_detection_name);
 
-std::cerr<<"leaving showAndSelectColor\n";
+    Log::Log("showAndSelectColor: H:%d-%d S:%d-%d V:%d-%d\n", low_H, high_H, low_S, high_S, low_V, high_V);
+    Log::Log("leaving showAndSelectColor\n");
 
     // Check if user chose no threshold.
     if(
