@@ -1,9 +1,21 @@
-This project is just playing with video editing and object tracking. 
-The makefile is a reusable opencv4 build setup. Might help get small projects started quickly.
+The videoCHOP class offers a couple video editing features: 
+(1) Track a chosen object and crop the video to follow it.
+(2) Chop clips out of a long video. You provide the source video and a list of the times you want 
+	cut out, and it creates a set of new videos.
 
-Tracker descriptions, examples and algorithm comparisions were summarized from:
-https://www.pyimagesearch.com/2018/07/30/opencv-object-tracking/
-https://www.learnopencv.com/object-tracking-using-opencv-cpp-python/
+Building with the makefile will create the program 'videoCHOP'. Run it without any arguments and
+it will display the help. The project started as a reusable makefile that used opencv4, and turned
+into a video editor.
+
+
+
+Trackers
+
+All of the trackers provided in OpenCv, plus one custom color-based one, are built into videoCHOP. 
+I haven't tried them all -- Mosse and CSRT work well enough for me. The comparisons below are 
+based off these pages:
+	https://www.pyimagesearch.com/2018/07/30/opencv-object-tracking/
+	https://www.learnopencv.com/object-tracking-using-opencv-cpp-python/
 
 BOOSTING 
     AdaBoost (Haar cascades) 
