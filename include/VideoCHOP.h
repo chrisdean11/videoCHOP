@@ -19,6 +19,7 @@ public:
     VideoCHOP() {}
     bool chop(std::string video, std::string filename, std::string dest);
     bool crop(std::string video, int width, int height, std::string dest, int speed = 1, std::string method = "mosse", bool dots = false);
+    bool slideshow(std::string src, std::string dst, std::string imageFolder);
 
     std::string method;
 

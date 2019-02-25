@@ -63,6 +63,23 @@ int main(int argc, char** argv )
             return 1;
         }
     }
+    else if (std::string(argv[1]).compare("slideshow") == 0)
+    {
+
+        std::string src = std::string(argv[2]);
+        std::string imageFolder = std::string(argv[3]);
+        std::string dst;
+
+        // Score fit based on:
+            // Raw image difference
+            // Difference disregarding color saturation
+            // Text analysis
+
+        if (!vc.slideshow(src, dst, imageFolder))
+        {
+
+        }
+    }
     else
     {
         Log::Log("Usage: ./videoCHOP chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n");

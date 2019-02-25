@@ -1,0 +1,1107 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"LOG",
+				"LOG_H"
+			],
+			[
+				"LogLevel",
+				"log_level_t"
+			],
+			[
+				"max",
+				"max"
+			],
+			[
+				"bigg",
+				"biggestIndex"
+			],
+			[
+				"frame",
+				"frame_threshold"
+			],
+			[
+				"low_",
+				"low_H"
+			],
+			[
+				"prev",
+				"prevLoc"
+			],
+			[
+				"previous",
+				"previousLoc"
+			],
+			[
+				"previ",
+				"previousLoc"
+			],
+			[
+				"Vide",
+				"VideoCHOP"
+			],
+			[
+				"VIDE",
+				"VideoCHOP"
+			],
+			[
+				"CoinMarketcap",
+				"CoinMarketCapQuote"
+			],
+			[
+				"Coinmar",
+				"CoinMarketCapTicker"
+			],
+			[
+				"coinm",
+				"CoinMarketCapMarketDataService"
+			],
+			[
+				"coin",
+				"CoinMarketCapExchange"
+			],
+			[
+				"Coinm",
+				"CoinMarketCapExchange"
+			],
+			[
+				"getPRice",
+				"getPriceAtDepth"
+			],
+			[
+				"currency",
+				"CurrencyPair"
+			],
+			[
+				"with",
+				"withdrawFee"
+			],
+			[
+				"getCurr",
+				"getCurrencyPairs"
+			],
+			[
+				"withdra",
+				"withdrawalFee"
+			],
+			[
+				"getEx",
+				"getExchangeRate"
+			],
+			[
+				"Currency",
+				"CurrencyMetaData"
+			],
+			[
+				"getEc",
+				"getExchangeRate"
+			],
+			[
+				"getE",
+				"getExchangeRate"
+			],
+			[
+				"Exchan",
+				"ExchangeMonitor"
+			],
+			[
+				"star",
+				"startNode"
+			],
+			[
+				"cur",
+				"currencies"
+			],
+			[
+				"getExc",
+				"getExchangeMetaData"
+			],
+			[
+				"exchan",
+				"ExchangeMonitor"
+			],
+			[
+				"getEXcha",
+				"getExchangeSpecification"
+			],
+			[
+				"Exchange",
+				"ExchangeMonitorLoadThread"
+			],
+			[
+				"api",
+				"apiKey"
+			],
+			[
+				"ask",
+				"askExchange"
+			],
+			[
+				"OER",
+				"OERMarketDataService"
+			],
+			[
+				"Ope",
+				"OpenExchangeRates"
+			],
+			[
+				"Exc",
+				"ExchangeSpecification"
+			],
+			[
+				"coinmark",
+				"CoinMarketCapTicker"
+			],
+			[
+				"CoinMA",
+				"CoinMarketCapTicker"
+			],
+			[
+				"CoinMar",
+				"CoinMarketCapTicker"
+			],
+			[
+				"Pe",
+				"ARBITRAGE_PERCENT"
+			],
+			[
+				"arbitra",
+				"arbitragePairs"
+			],
+			[
+				"detail",
+				"detailsLog"
+			],
+			[
+				"ORDERB",
+				"ORDERBOOK_DEPTH"
+			],
+			[
+				"USD",
+				"USD_TRADE_AMOUNT"
+			],
+			[
+				"currencies",
+				"currenciesOfInterest"
+			],
+			[
+				"Curren",
+				"CurrencyPair"
+			],
+			[
+				"hitbtc",
+				"Hitbtc"
+			],
+			[
+				"arbitr",
+				"arbitragePairs"
+			],
+			[
+				"excha",
+				"exchange"
+			],
+			[
+				"cu",
+				"getCurrencyPairs"
+			],
+			[
+				"Curr",
+				"CurrencyPair"
+			],
+			[
+				"gda",
+				"gdaxMon"
+			],
+			[
+				"EX",
+				"ExchangeMonitors"
+			],
+			[
+				"Excha",
+				"ExchangeMonitor"
+			],
+			[
+				"List",
+				"ArrayList"
+			],
+			[
+				"Bittre",
+				"BittrexMonitor"
+			],
+			[
+				"GDAXS",
+				"GDAXStreamingMarketDataService"
+			],
+			[
+				"produc",
+				"productSubscriptionBuilder"
+			],
+			[
+				"StreamingEx",
+				"StreamingExchangeFactory"
+			],
+			[
+				"market",
+				"marketDataService"
+			],
+			[
+				"exchangein",
+				"exchangeInfos"
+			],
+			[
+				"currencypairs",
+				"currencyPairs"
+			],
+			[
+				"exchangeinfo",
+				"ExchangeInfo"
+			],
+			[
+				"bittre",
+				"bittrexCurrencyPairs"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "README",
+			"settings":
+			{
+				"buffer_size": 2854,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/home/cd/Eclipse-Workspace/Joulu2018/test/times.txt",
+			"settings":
+			{
+				"buffer_size": 29,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "Makefile",
+			"settings":
+			{
+				"buffer_size": 2440,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Main.cpp",
+			"settings":
+			{
+				"buffer_size": 1791,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "include/VideoCHOP.h",
+			"settings":
+			{
+				"buffer_size": 1180,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/VideoCHOP.cpp",
+			"settings":
+			{
+				"buffer_size": 13419,
+				"encoding": "UTF-8",
+				"line_ending": "Unix",
+				"name": "/*"
+			}
+		},
+		{
+			"file": "include/SelectHSV.h",
+			"settings":
+			{
+				"buffer_size": 3979,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "include/Log.h",
+			"settings":
+			{
+				"buffer_size": 513,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "src/Log.cpp",
+			"settings":
+			{
+				"buffer_size": 2036,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 184.0,
+		"last_filter": "package ",
+		"selected_items":
+		[
+			[
+				"package ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 461.0
+	},
+	"console":
+	{
+		"height": 178.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/cd/Eclipse-Workspace/videoCHOP",
+		"/home/cd/Eclipse-Workspace/videoCHOP/include",
+		"/home/cd/Eclipse-Workspace/videoCHOP/src"
+	],
+	"file_history":
+	[
+		"/home/cd/Eclipse-Workspace/videoCHOP/include/LOG.h",
+		"/home/cd/Eclipse-Workspace/videoCHOP/include/Log.cpp",
+		"/home/cd/.bashrc",
+		"/home/cd/Eclipse-Workspace/Makefile-Template",
+		"/home/cd/Eclipse-Workspace/displayImage/CMakeLists.txt",
+		"/home/cd/Eclipse-Workspace/displayImage/DisplayImage.cpp",
+		"/home/cd/Eclipse-Workspace/displayImage/Makefile.make",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-09-10T23:31:44.124.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-09-10T23:31:44.180.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/fees/GDAX.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/fees/Binance.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/fees/Binance.csv",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/fees/GDAX.csv",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/FeeParser.java",
+		"/home/cd/Eclipse-Workspace/XChange/pom.xml",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/OpenExchangeRates.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-openexchangerates/src/main/java/org/knowm/xchange/oer/OERExchange.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-openexchangerates/src/main/java/org/knowm/xchange/oer/service/OERMarketDataService.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-openexchangerates/src/main/java/org/knowm/xchange/oer/OER.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-openexchangerates/src/main/java/org/knowm/xchange/oer/service/OERMarketDataServiceRaw.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-openexchangerates/src/main/java/org/knowm/xchange/oer/dto/marketdata/OERRates.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/currency/Currency.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-openexchangerates/src/main/java/org/knowm/xchange/oer/dto/marketdata/OERTickers.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-openexchangerates/src/main/java/org/knowm/xchange/oer/service/OERBaseService.java",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/README.md",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/ExchangeFactory.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/service/marketdata/MarketDataService.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/BaseExchange.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-coinmarketcap/src/main/java/org/knowm/xchange/coinmarketcap/dto/marketdata/CoinMarketCapTicker.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-coinmarketcap/src/main/java/org/knowm/xchange/coinmarketcap/dto/marketdata/CoinMarketCapQuote.java",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/ExchangeMonitorLoadThread.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/dto/meta/CurrencyPairMetaData.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/dto/meta/ExchangeMetaData.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/Exchange.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-binance/src/main/java/org/knowm/xchange/binance/BinanceExchange.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/table_values.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/table_withdrawFees.txt",
+		"/home/cd/Eclipse-Workspace/CsvToJson/sample.csv",
+		"/home/cd/Eclipse-Workspace/CsvToJson/CsvToJson.py",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/ExchangeMonitor.java",
+		"/home/cd/Eclipse-Workspace/CsvToJson/sample.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/CsvToJson.py",
+		"/home/cd/Eclipse-Workspace/keys",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/Node.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/table_paths.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-05-20T18:05:01.150.txt",
+		"/home/cd/Eclipse-Workspace/tables.csv",
+		"/home/cd/Eclipse-Workspace/tradebotbackup/tradebot/src/main/java/cd/ExchangeMonitor.java",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/GDAX.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/CryptopiaExchange.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/cryptopia.json",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/currency/CurrencyPair.java",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/Fees/Binance.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/GDAXExchange.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/BinanceExchange.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/resources/binance.json",
+		"/home/cd/Eclipse-Workspace/workspace.sublime-project",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-binance/target/classes/binance.json",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bitmex/target/classes/bitmex.json",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/Main.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/ExchangeSpecification.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/dto/meta/CurrencyMetaData.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/target/apidocs/org/knowm/xchange/dto/meta/CurrencyMetaData.html",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bitstamp/src/main/java/org/knowm/xchange/bitstamp/BitstampAdapters.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bitstamp/src/main/java/org/knowm/xchange/bitstamp/BitstampV2.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bitstamp/src/main/java/org/knowm/xchange/bitstamp/service/BitstampMarketDataServiceRaw.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bitstamp/src/main/java/org/knowm/xchange/bitstamp/service/BitstampMarketDataService.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-15T02:04:01.526.txt",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bitstamp/src/main/java/org/knowm/xchange/bitstamp/dto/marketdata/BitstampTicker.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bitstamp/src/main/java/org/knowm/xchange/bitstamp/Bitstamp.java",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/BaseExchangeMonitor.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-03-11T20:04:01.531.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-03-11T21:04:01.557.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-03-10T12:04:01.775.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-10T13:04:01.827.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-10T02:04:01.435.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-10T01:44:38.515.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-10T01:44:28.500.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-09T23:04:01.721.txt",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/dto/marketdata/Ticker.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-coinbase/src/main/java/org/knowm/xchange/coinbase/v2/dto/marketdata/CoinbaseExchangeRateData.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-08T02:27:30.161.txt",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-examples/src/main/java/org/knowm/xchange/examples/openexchangerates/marketdata/TickerDemo.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-coinmarketcap/src/main/java/org/knowm/xchange/coinmarketcap/dto/marketdata/CoinMarketCapCurrency.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/CurrenciesPerExchange.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/CoinMarketCapPrices.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-05T21:30:44.864.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-03-04T00:17:33.746.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/Prices.txt",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/dto/trade/LimitOrder.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/dto/Order.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/src/main/java/org/knowm/xchange/dto/marketdata/OrderBook.java",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-01T22:11:52.365.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-03-01T22:11:52.301.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/scripts/chron.sh",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-01T21:44:41.977.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-01T21:38:42.821.txt",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-core/pom.xml",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-01T02:32:45.687.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-01T21:11:54.355.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-03-01T02:41:51.487.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/pom.xml",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-02-28T02:23:37.158.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-02-28T02:49:50.936.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-02-28T02:49:51.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-02-25T18:53:11.754.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-02-25T18:53:11.696.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/DetailsLog2018-02-25T18:20:21.528.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/logs/ComparisonLog2018-02-25T18:20:21.472.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/target/ComparisonLog2018-02-24T16:52:37.455.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/target/ComparisonLog2018-02-24T16:25:16.446.txt",
+		"/home/cd/.m2/settings.xml",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/Currency.java",
+		"/home/cd/Eclipse-Workspace/tradebot/target/Jan24-1:37am.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/target/file.txt",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/GDAXMonitor.java",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/BittrexMonitor.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-liqui/pom.xml",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/MarketSnapshot.java",
+		"/home/cd/Eclipse-Workspace/tradebot/target/logback.xml",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-examples/pom.xml",
+		"/home/cd/Eclipse-Workspace/xchange-stream/xchange-stream-core/src/main/java/info/bitrich/xchangestream/core/ProductSubscription.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-bittrex/src/main/java/org/knowm/xchange/bittrex/BittrexExchange.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-examples/src/main/java/org/knowm/xchange/examples/gdax/GDAXTradesDemo.java",
+		"/home/cd/Eclipse-Workspace/tradebot/src/main/java/cd/Ticker.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-ccex/src/main/java/org/knowm/xchange/ccex/dto/ticker/Ticker.java",
+		"/home/cd/Eclipse-Workspace/XChange/xchange-examples/src/main/java/org/knowm/xchange/examples/gdax/GDAXDepthDemo.java",
+		"/home/cd/Eclipse-Workspace/xchange-parent/src/main/java/BittrexMarketDataDemo.java"
+	],
+	"find":
+	{
+		"height": 44.0
+	},
+	"find_in_files":
+	{
+		"height": 110.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"if (dots)",
+			"high_V",
+			"low_V",
+			"high_S",
+			"high_H",
+			"low_H",
+			"inrange",
+			"%s",
+			"LOG << ",
+			"=",
+			"selectROI(",
+			"roi",
+			"cmp(method",
+			"setTrack",
+			"max",
+			"min",
+			"settrackbarpos",
+			"max_value",
+			"\n            {",
+			"if ",
+			"P\n",
+			"P",
+			"p",
+			"P",
+			"p",
+			"P",
+			"break;",
+			":\n",
+			":",
+			"case ",
+			"tracker =",
+			"\n",
+			"first ",
+			"`",
+			"\"",
+			"\")",
+			"FRAMESPEED",
+			"frameSpeed",
+			"VideoCHOP::",
+			"\nvoid",
+			"static ",
+			" = max_value",
+			"high_H",
+			"\nvoid",
+			"Vide",
+			"static",
+			"on_low_H_thresh_trackbar",
+			"max_value_H",
+			"int max_value_H",
+			"gettimes",
+			"max_value_H",
+			")",
+			"(",
+			"\t",
+			"(",
+			"[",
+			"FRAMESPEED",
+			"frame ",
+			"frame:",
+			"mat",
+			"color",
+			"previousLoc",
+			"VideoCHOP::",
+			"yCroppedWidth",
+			"avi",
+			"orig",
+			"croppedWidth",
+			"originalWidth",
+			"croppedWidth",
+			"y",
+			"x",
+			"LOG(",
+			"Chop"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 8,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "README",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2854,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								713,
+								713
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "/home/cd/Eclipse-Workspace/Joulu2018/test/times.txt",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 29,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								29,
+								29
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Text/Plain text.tmLanguage"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "Makefile",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2440,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1287,
+								1287
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Makefile/Makefile.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 278.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "src/Main.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1791,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								859,
+								859
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 594.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "include/VideoCHOP.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 1180,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								586,
+								586
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 4,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "src/VideoCHOP.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 13419,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6446,
+								6446
+							]
+						],
+						"settings":
+						{
+							"auto_name": "/*",
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2972.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "include/SelectHSV.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3979,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1079,
+								1079
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1914.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 7,
+					"file": "include/Log.h",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 513,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "src/Log.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2036,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								38,
+								38
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 31.0
+	},
+	"input":
+	{
+		"height": 44.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"output.unsaved_changes":
+	{
+		"height": 103.0
+	},
+	"pinned_build_system": "",
+	"project": "videochop.sublime-project",
+	"replace":
+	{
+		"height": 58.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"currency",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/currency/Currency.java"
+			],
+			[
+				"coinmarketcapprices",
+				"tradebot/src/main/java/cd/CoinMarketCapPrices.java"
+			],
+			[
+				"coinmarketcapquote",
+				"XChange/xchange-coinmarketcap/src/main/java/org/knowm/xchange/coinmarketcap/dto/marketdata/CoinMarketCapQuote.java"
+			],
+			[
+				"binance.json",
+				"XChange/xchange-binance/target/classes/binance.json"
+			],
+			[
+				"binanceexchange.java",
+				"XChange/xchange-binance/src/main/java/org/knowm/xchange/binance/BinanceExchange.java"
+			],
+			[
+				"cryptopia.json",
+				"XChange/xchange-cryptopia/src/main/resources/cryptopia.json"
+			],
+			[
+				".json",
+				"XChange/xchange-bitmex/target/classes/bitmex.json"
+			],
+			[
+				"currency.java",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/currency/Currency.java"
+			],
+			[
+				"baseexchange",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/BaseExchange.java"
+			],
+			[
+				"currencymeta",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/dto/meta/CurrencyMetaData.java"
+			],
+			[
+				"currencyme",
+				"XChange/xchange-core/target/apidocs/org/knowm/xchange/dto/meta/CurrencyMetaData.html"
+			],
+			[
+				"exchangemetada",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/dto/meta/ExchangeMetaData.java"
+			],
+			[
+				"exchangmo",
+				"tradebot/src/main/java/cd/ExchangeMonitor.java"
+			],
+			[
+				"exchangefac",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/ExchangeFactory.java"
+			],
+			[
+				"currencypair",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/currency/CurrencyPair.java"
+			],
+			[
+				"ticker.java",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/dto/marketdata/Ticker.java"
+			],
+			[
+				"marketdataser",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/service/marketdata/MarketDataService.java"
+			],
+			[
+				"currencypar",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/currency/CurrencyPair.java"
+			],
+			[
+				"currency.ja",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/currency/Currency.java"
+			],
+			[
+				"baseex",
+				"tradebot/src/main/java/cd/BaseExchangeMonitor.java"
+			],
+			[
+				"gdaxmonit",
+				"tradebot/src/main/java/cd/GDAXMonitor.java"
+			],
+			[
+				"baseexchange.java",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/BaseExchange.java"
+			],
+			[
+				"exchange.java",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/Exchange.java"
+			],
+			[
+				"orderbook.java",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/dto/marketdata/OrderBook.java"
+			],
+			[
+				"tiker.java",
+				"tradebot/src/main/java/cd/Ticker.java"
+			],
+			[
+				"ticker",
+				"tradebot/src/main/java/cd/Ticker.java"
+			],
+			[
+				"currencyp",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/currency/CurrencyPair.java"
+			],
+			[
+				"accountservie",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/service/account/AccountService.java"
+			],
+			[
+				"tradeser",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/service/trade/TradeService.java"
+			],
+			[
+				"trades",
+				"XChange/xchange-core/src/main/java/org/knowm/xchange/service/trade/TradeService.java"
+			],
+			[
+				"tradeservic",
+				"XChange/xchange-core/target/apidocs/org/knowm/xchange/service/trade/TradeService.html"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 346.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

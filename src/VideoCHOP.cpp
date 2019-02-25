@@ -447,3 +447,24 @@ Point VideoCHOP::findObject(const Mat &frame)
         return (rect.br() + rect.tl())*0.5;
     }
 }
+
+bool VideoCHOP::slideshow(std::string src, std::string dst, std::string imageFolder)
+{
+    // Make src, dst videocapture/writer
+
+    // On first frame, select four corners of screen
+
+    // For each frame:
+        // Grab and perform affine transformation
+
+        // Compare output matrix with each slide. 
+            // Come up with a confidence metric and a way to blend multiple tests together.
+            // Each test is simple and based off a certain heuristic. Returns a normalized scalar.
+                // Direct sumsq/stdev pixel difference
+                // Difference but ignoring color saturation
+                // Text comparison
+
+        // Choose best one
+
+        // 
+}
