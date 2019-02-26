@@ -448,13 +448,65 @@ Point VideoCHOP::findObject(const Mat &frame)
     }
 }
 
-bool VideoCHOP::slideshow(std::string src, std::string dst, std::string imageFolder)
+bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string imageFolder)
 {
-    // Make src, dst videocapture/writer
+    std::vector<Mat> slides;
+    VideoWriter src, dst;
 
-    // On first frame, select four corners of screen
+    // Load slides
+    vector<std::string> filenames;
+    glob(imageFolder + "*", filenames, false);
+
+    int count = filenames.size(); 
+    for (int i = 0; i < count; i++)
+    {
+        try
+        {
+            Mat slide = imread(filenames[i], IMREAD_COLOR);
+        }
+        catch (const std::exception & e)
+        {
+            LOG("Could not load %s: %s\n", filenames[i], e);
+            continue;
+        }
+
+        slides.push_back(slide);
+    }
+
+    // Make src, dst videocapture/writer
+    src = VideoCapture(srcname);
+
+    if (!src.isOpened())
+    {
+        Log::Log("Error: %s not opened successfully.\n", srcname.c_str());
+        return false;
+    }
+
+    // Get source clip info: size, fourcc, fps
+    Size S = Size( (int)src.get(CAP_PROP_FRAME_WIDTH), (int)src.get(CAP_PROP_FRAME_HEIGHT));
+    int ex = static_cast<int>(src.get(CAP_PROP_FOURCC));     // Get Codec Type- Int form
+    double fps = src.get(CAP_PROP_FPS);
+
+    // Write videos in same size as source image
+    Size slideSize = slides[0].size();
+    dst = VideoWriter(dstname, ex, fps, slideSize, true);
 
     // For each frame:
+    bool firstFrame = true;
+    for(;;)
+    {
+        Mat mat; 
+
+        if(!src.read(mat))
+        {
+            break;
+        }
+        else if (first)
+        {
+            // On first frame, select four corners of screen
+        
+        }
+    
         // Grab and perform affine transformation
 
         // Compare output matrix with each slide. 
@@ -464,7 +516,9 @@ bool VideoCHOP::slideshow(std::string src, std::string dst, std::string imageFol
                 // Difference but ignoring color saturation
                 // Text comparison
 
-        // Choose best one
+        // Choose best match
 
-        // 
+        // Add this slide to the output video
+
+    }
 }
