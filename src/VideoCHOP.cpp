@@ -362,7 +362,7 @@ Point VideoCHOP::findObject(const Mat &frame)
                 return Point(frame.cols/2, frame.rows/2);   
             }
 
-            bool fromCenter = false;
+            bool fromCenter = false; // How the rectangle is drawn
             rect = selectROI(frame, fromCenter); 
 
             bool ok = tracker->init(frame, rect);
@@ -451,7 +451,10 @@ Point VideoCHOP::findObject(const Mat &frame)
 bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string imageFolder)
 {
     std::vector<Mat> slides;
-    VideoWriter src, dst;
+    VideoCapture src;
+    VideoWriter dst;
+
+    a = b = c = d = Point(-1,-1);
 
     // Load slides
     vector<std::string> filenames;
@@ -473,7 +476,7 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
         slides.push_back(slide);
     }
 
-    // Make src, dst videocapture/writer
+    // Open video files
     src = VideoCapture(srcname);
 
     if (!src.isOpened())
@@ -487,26 +490,36 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
     int ex = static_cast<int>(src.get(CAP_PROP_FOURCC));     // Get Codec Type- Int form
     double fps = src.get(CAP_PROP_FPS);
 
-    // Write videos in same size as source image
+    // Output video is same size as source image
     Size slideSize = slides[0].size();
     dst = VideoWriter(dstname, ex, fps, slideSize, true);
 
     // For each frame:
     bool firstFrame = true;
+
     for(;;)
     {
-        Mat mat; 
+        Mat mat;
 
         if(!src.read(mat))
         {
             break;
         }
-        else if (first)
+        else if (firstFrame)
         {
             // On first frame, select four corners of screen
-        
+            std::string windowname = "Select presentation screen";
+            namedWindow(windowname);
+            setMouseCallback(windowname, onMouse, &mat);
+
+            while(d != Point(-1,-1))
+            {
+                cv::imshow(windowname, mat);
+            }
+
+            firstFrame = false;
         }
-    
+
         // Grab and perform affine transformation
 
         // Compare output matrix with each slide. 
@@ -520,5 +533,52 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
 
         // Add this slide to the output video
 
+    }
+}
+
+// Select points on left click
+void videoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata)
+{
+    Point *p; // point to set if this is a click
+    Mat *img = (Mat *)userdata;
+
+    if (d != Point(-1,-1))
+    {
+        // All four points have been selected
+        return;
+    }
+    else if (c != Point(-1,-1))
+    {
+        // Three points have already been selected. Draw full box with current position.
+        //void line(InputOutputArray img, Point pt1, Point pt2, const Scalar& color, int thickness=1, int lineType=LINE_8, int shift=0 )
+        line(*img, a, b, Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(*img, b, c, Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(*img, c, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(*img, Point(x,y), a, Scalar(255, 0, 0), 2, LINE_8, 0);
+        p = &d;
+    }
+    else if (b != Point(-1,-1))
+    {
+        // Two points has already been selected.
+        line(*img, a, b, Scalar(255, 0, 0), 1, LINE_8, 0);
+        line(*img, b, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
+        p = &c;
+    }
+    else if (a != Point(-1,-1))
+    {
+        // One point has already been selected.
+        line(*img, a, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
+        p = &b;
+    }
+    else
+    {
+        // This is the first point to be selected.
+        p = &a;
+    }
+
+    if (event == EVENT_LBUTTONDOWN)
+    {
+        *p = Point(x,y);
+        return;
     }
 }
