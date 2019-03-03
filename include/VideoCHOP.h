@@ -24,7 +24,7 @@ public:
     std::string method;
 
 private:
-    Point a, b, c, d; // Corners of slideshow selection
+    static cv::Point a, b, c, d; // Corners of slideshow selection
 
     struct timeVal
     {
@@ -44,5 +44,5 @@ private:
     bool getTimesFromFile(std::string filename, std::vector<timeVal> &times);
     bool getAllFramesFromVideo(std::vector<cv::Mat> &frames, const std::string &videoname, int &codec, double &fps, cv::Size &size);
     cv::Point findObject(const cv::Mat &mat);
-    void mouseCallback(int event, int x, int y, int flags, void* userdata);
+    static void mouseCallback(int event, int x, int y, int flags, void* userdata);
 };

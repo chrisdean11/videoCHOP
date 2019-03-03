@@ -67,8 +67,8 @@ int main(int argc, char** argv )
     {
 
         std::string src = std::string(argv[2]);
-        std::string imageFolder = std::string(argv[3]);
-        std::string dst;
+        std::string dst = std::string(argv[3]);
+        std::string imageFolder = std::string(argv[4]);
 
         // Score fit based on:
             // Raw image difference
@@ -77,13 +77,14 @@ int main(int argc, char** argv )
 
         if (!vc.slideshow(src, dst, imageFolder))
         {
-
+            Log::Log("slideshow returned false\n");
         }
     }
     else
     {
         Log::Log("Usage: ./videoCHOP chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n");
         Log::Log("Usage: ./videoCHOP crop /path/to/filename.mp4 /path/to/destfile.mp4 width height [speed] [method] [dots]\n");
+        Log::Log("Usage: ./videoCHOP slideshow /path/to/filename.mp4 /path/to/destfile.mp4 /path/to/images/folder\n");
         return 1;
     }
 

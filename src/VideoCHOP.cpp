@@ -15,6 +15,12 @@
 using namespace cv;
 bool first = true;
 
+// Define static members
+Point VideoCHOP::a = Point(-1,-1);
+Point VideoCHOP::b = Point(-1,-1);
+Point VideoCHOP::c = Point(-1,-1);
+Point VideoCHOP::d = Point(-1,-1);
+
 bool VideoCHOP::chop(std::string videoname, std::string filename, std::string dest)
 {
     bool success = true;
@@ -454,22 +460,22 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
     VideoCapture src;
     VideoWriter dst;
 
-    a = b = c = d = Point(-1,-1);
-
     // Load slides
-    vector<std::string> filenames;
+    std::vector<std::string> filenames;
     glob(imageFolder + "*", filenames, false);
 
     int count = filenames.size(); 
     for (int i = 0; i < count; i++)
     {
+        Mat slide;
+
         try
         {
-            Mat slide = imread(filenames[i], IMREAD_COLOR);
+            slide = imread(filenames[i], IMREAD_COLOR);
         }
         catch (const std::exception & e)
         {
-            LOG("Could not load %s: %s\n", filenames[i], e);
+            Log::Log("Could not load %s: %s\n", filenames[i].c_str(), e.what());
             continue;
         }
 
@@ -510,17 +516,58 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
             // On first frame, select four corners of screen
             std::string windowname = "Select presentation screen";
             namedWindow(windowname);
-            setMouseCallback(windowname, onMouse, &mat);
+            Point p;
+            setMouseCallback(windowname, mouseCallback, &mat);
 
-            while(d != Point(-1,-1))
+            //while(a == Point(-1,-1))
+            //{
+            //    cv::imshow(windowname, mat);
+            //}
+//
+            //a = p;
+//
+            //while(b == Point(-1,-1))
+            //{
+            //    cv::imshow(windowname, mat);
+            //}
+//
+            //b = p;
+//
+            //while(c == Point(-1,-1))
+            //{
+            //    cv::imshow(windowname, mat);
+            //}
+//
+            //c = p;
+
+            while(d == Point(-1,-1))
             {
                 cv::imshow(windowname, mat);
             }
+
+            //d = p;
 
             firstFrame = false;
         }
 
         // Grab and perform affine transformation
+        Point2f srcTri[3];
+        Point2f dstTri[3];
+        Mat warp_mat( 2, 3, CV_32FC1 );
+        Mat warp_dst;
+
+        warp_dst = Mat::zeros(slides[0].rows, slides[0].cols, slides[0].type() );
+
+        srcTri[0] = a;
+        srcTri[1] = b;
+        srcTri[2] = d;
+
+        dstTri[0] = Point2f(0, 0);
+        dstTri[1] = Point2f(slideSize.width, 0);
+        dstTri[2] = Point2f(0, slideSize.height);
+
+        warp_mat = getAffineTransform( srcTri, dstTri );
+        warpAffine( mat, warp_dst, warp_mat, warp_dst.size() );
 
         // Compare output matrix with each slide. 
             // Come up with a confidence metric and a way to blend multiple tests together.
@@ -532,12 +579,28 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
         // Choose best match
 
         // Add this slide to the output video
+        dst << warp_dst;
 
     }
+
+    return true;
 }
 
+//void VideoCHOP::mouseCallback2(int event, int x, int y, int flags, void* userdata)
+//{
+//    if (event != EVENT_LBUTTONDOWN)
+//    {
+//        Log::Log("not a click");
+//        return;
+//    }
+//
+//    Point * p = (Point *)userdata;
+//    p->x = x;
+//    p->y = y;
+//}
+
 // Select points on left click
-void videoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata)
+void VideoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata)
 {
     Point *p; // point to set if this is a click
     Mat *img = (Mat *)userdata;
@@ -559,7 +622,7 @@ void videoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata
     }
     else if (b != Point(-1,-1))
     {
-        // Two points has already been selected.
+        // Two points have already been selected.
         line(*img, a, b, Scalar(255, 0, 0), 1, LINE_8, 0);
         line(*img, b, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
         p = &c;
