@@ -12,6 +12,7 @@ int main(int argc, char** argv )
 {
     VideoCHOP vc;
 
+Log::Log("%s:%d\n",__func__, __LINE__);
     // Parse arguments
     if(argc >= 6 && std::string(argv[1]).compare("crop") == 0) // CROP
     {
@@ -63,9 +64,10 @@ int main(int argc, char** argv )
             return 1;
         }
     }
-    else if (std::string(argv[1]).compare("slideshow") == 0)
+    else if (argc >= 5 && std::string(argv[1]).compare("slideshow") == 0)
     {
 
+Log::Log("%s:%d\n",__func__, __LINE__);
         std::string src = std::string(argv[2]);
         std::string dst = std::string(argv[3]);
         std::string imageFolder = std::string(argv[4]);

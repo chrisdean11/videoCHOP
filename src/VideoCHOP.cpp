@@ -459,28 +459,29 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
     std::vector<Mat> slides;
     VideoCapture src;
     VideoWriter dst;
+    ImageMatch imageMatch(imageFolder);
 
     // Load slides
-    std::vector<std::string> filenames;
-    glob(imageFolder + "*", filenames, false);
-
-    int count = filenames.size(); 
-    for (int i = 0; i < count; i++)
-    {
-        Mat slide;
-
-        try
-        {
-            slide = imread(filenames[i], IMREAD_COLOR);
-        }
-        catch (const std::exception & e)
-        {
-            Log::Log("Could not load %s: %s\n", filenames[i].c_str(), e.what());
-            continue;
-        }
-
-        slides.push_back(slide);
-    }
+//    std::vector<std::string> filenames;
+//    glob(imageFolder + "*", filenames, false);
+//
+//    int count = filenames.size(); 
+//    for (int i = 0; i < count; i++)
+//    {
+//        Mat slide;
+//
+//        try
+//        {
+//            slide = imread(filenames[i], IMREAD_COLOR);
+//        }
+//        catch (const std::exception & e)
+//        {
+//            Log::Log("Could not load %s: %s\n", filenames[i].c_str(), e.what());
+//            continue;
+//        }
+//
+//        slides.push_back(slide);
+//    }
 
     // Open video files
     src = VideoCapture(srcname);
@@ -497,7 +498,7 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
     double fps = src.get(CAP_PROP_FPS);
 
     // Output video is same size as source image
-    Size slideSize = slides[0].size();
+    // Size slideSize = slides[0].size();
     dst = VideoWriter(dstname, ex, fps, slideSize, true);
 
     // For each frame:
@@ -518,6 +519,7 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
             namedWindow(windowname);
             Point p;
             setMouseCallback(windowname, mouseCallback, &mat);
+
 
             //while(a == Point(-1,-1))
             //{
@@ -540,15 +542,19 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
 //
             //c = p;
 
-            while(d == Point(-1,-1))
-            {
-                cv::imshow(windowname, mat);
-            }
+            //while(d == Point(-1,-1))
+            //{
+            //    cv::imshow(windowname, mat);
+            //}
+
+            cv::imshow(windowname, mat);
+            waitKey(0);
 
             //d = p;
 
             firstFrame = false;
         }
+
 
         // Grab and perform affine transformation
         Point2f srcTri[3];
@@ -575,8 +581,11 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
                 // Direct sumsq/stdev pixel difference
                 // Difference but ignoring color saturation
                 // Text comparison
+        
 
         // Choose best match
+        //getMatch(warp_dst INOUT);
+
 
         // Add this slide to the output video
         dst << warp_dst;
@@ -603,7 +612,9 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
 void VideoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata)
 {
     Point *p; // point to set if this is a click
-    Mat *img = (Mat *)userdata;
+    Mat *ptr = (Mat *)userdata;
+
+    Mat img = ptr->clone();
 
     if (d != Point(-1,-1))
     {
@@ -614,23 +625,23 @@ void VideoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata
     {
         // Three points have already been selected. Draw full box with current position.
         //void line(InputOutputArray img, Point pt1, Point pt2, const Scalar& color, int thickness=1, int lineType=LINE_8, int shift=0 )
-        line(*img, a, b, Scalar(255, 0, 0), 2, LINE_8, 0);
-        line(*img, b, c, Scalar(255, 0, 0), 2, LINE_8, 0);
-        line(*img, c, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
-        line(*img, Point(x,y), a, Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(img, a, b, Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(img, b, c, Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(img, c, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(img, Point(x,y), a, Scalar(255, 0, 0), 2, LINE_8, 0);
         p = &d;
     }
     else if (b != Point(-1,-1))
     {
         // Two points have already been selected.
-        line(*img, a, b, Scalar(255, 0, 0), 1, LINE_8, 0);
-        line(*img, b, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(img, a, b, Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(img, b, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
         p = &c;
     }
     else if (a != Point(-1,-1))
     {
         // One point has already been selected.
-        line(*img, a, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
+        line(img, a, Point(x,y), Scalar(255, 0, 0), 2, LINE_8, 0);
         p = &b;
     }
     else
@@ -638,6 +649,9 @@ void VideoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata
         // This is the first point to be selected.
         p = &a;
     }
+
+    std::string windowname = "Select presentation screen";
+    cv::imshow(windowname, img);
 
     if (event == EVENT_LBUTTONDOWN)
     {

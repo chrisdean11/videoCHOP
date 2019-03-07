@@ -37,7 +37,10 @@ LIBS = 	-lopencv_core 		\
 		# locate libopencv_ to see all of these, and what folders they reside in
 
 # define the C source files
-SRCS = src/Main.cpp src/VideoCHOP.cpp src/Log.cpp
+SRCS = 	src/Main.cpp		\
+		src/VideoCHOP.cpp 	\
+		src/Log.cpp       	\
+		src/ImageMatch.cpp
 
 # define the C object files 
 #
