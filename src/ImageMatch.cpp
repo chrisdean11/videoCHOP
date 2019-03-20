@@ -1,8 +1,14 @@
 #include "Log.h"
+#include "ImageMatch.h"
+
+#include <opencv2/imgproc.hpp>
+#include <opencv2/opencv.hpp>
+
+using namespace cv;
 
 ImageMatch::ImageMatch(std::string dir)
 {
-    // Load slides
+    // Load slides into images list
     std::vector<std::string> filenames;
     glob(dir + "*", filenames, false);
 
@@ -26,13 +32,19 @@ ImageMatch::ImageMatch(std::string dir)
     }
 }
 
-std::vector<float> ImageMatch::getScores(cv::Mat img)
+std::vector<float> ImageMatch::getScores(Mat img)
 {
     std::vector<float> ret;
     return ret;
 }
 
-cv::Mat ImageMatch::getBestMatch(cv::Mat img)
+Mat ImageMatch::getBestMatch(Mat img)
 {
     return img;
+}
+
+Size ImageMatch::getSize()
+{
+    if (images.size() == 0) return Size(0,0);
+    else return Size(images[0].size());
 }

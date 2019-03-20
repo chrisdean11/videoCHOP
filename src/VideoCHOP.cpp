@@ -7,6 +7,7 @@
 #include "VideoCHOP.h"
 #include "SelectHSV.h"
 #include "Log.h"
+#include "ImageMatch.h"
 
 #include <opencv2/opencv.hpp>
 #include <opencv2/tracking.hpp>
@@ -460,6 +461,7 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
     VideoCapture src;
     VideoWriter dst;
     ImageMatch imageMatch(imageFolder);
+    Size slideSize = imageMatch.getSize();
 
     // Load slides
 //    std::vector<std::string> filenames;
