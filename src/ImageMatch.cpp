@@ -32,6 +32,7 @@ ImageMatch::ImageMatch(std::string dir)
     }
 }
 
+// Return a list of match scores. Perhaps this will be a different score for every method.
 std::vector<float> ImageMatch::getScores(Mat img)
 {
     std::vector<float> ret;
@@ -43,8 +44,16 @@ Mat ImageMatch::getBestMatch(Mat img)
     return img;
 }
 
-Size ImageMatch::getSize()
+// Get the size of the slides
+Size ImageMatch::getSize() const
 {
     if (images.size() == 0) return Size(0,0);
-    else return Size(images[0].size());
+    else return images[0].size();
+}
+
+// Get the image type of the slides
+int ImageMatch::getType() const
+{
+    if (images.size() == 0) return -1;
+    else return images[0].type();
 }

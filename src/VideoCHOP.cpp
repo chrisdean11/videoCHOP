@@ -306,7 +306,7 @@ bool VideoCHOP::getAllFramesFromVideo(std::vector<Mat> &frames, const std::strin
     return true;
 }
 
-// Returns center point of the biggest object detected after threshold.
+// Returns center point of the object detected by the chosen method
 Point VideoCHOP::findObject(const Mat &frame)
 {
     // TODO just make data members out of these static and globals
@@ -557,22 +557,19 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
             firstFrame = false;
         }
 
-
         // Grab and perform affine transformation
         Point2f srcTri[3];
         Point2f dstTri[3];
         Mat warp_mat( 2, 3, CV_32FC1 );
-        Mat warp_dst;
-
-        warp_dst = Mat::zeros(slides[0].rows, slides[0].cols, slides[0].type() );
+        Mat warp_dst(Mat::zeros(imageMatch.getSize(), imageMatch.getType()));
 
         srcTri[0] = a;
         srcTri[1] = b;
         srcTri[2] = d;
 
         dstTri[0] = Point2f(0, 0);
-        dstTri[1] = Point2f(slideSize.width, 0);
-        dstTri[2] = Point2f(0, slideSize.height);
+        dstTri[1] = Point2f(imageMatch.getSize().width, 0);
+        dstTri[2] = Point2f(0, imageMatch.getSize().height);
 
         warp_mat = getAffineTransform( srcTri, dstTri );
         warpAffine( mat, warp_dst, warp_mat, warp_dst.size() );
