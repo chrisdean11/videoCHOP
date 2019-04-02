@@ -13,6 +13,7 @@ private:
     std::vector<cv::Mat> images;
 
     // Methods to select from
+    bool test;
     bool histogram;
     bool text;
 };

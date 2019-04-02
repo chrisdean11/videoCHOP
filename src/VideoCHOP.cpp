@@ -583,7 +583,7 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
         
 
         // Choose best match
-        //getMatch(warp_dst INOUT);
+        getMatch(warp_dst INOUT);
 
 
         // Add this slide to the output video
