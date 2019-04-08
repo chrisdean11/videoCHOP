@@ -33,7 +33,8 @@ LIBS = 	-lopencv_core 		\
 		-lopencv_imgproc	\
 		-lopencv_imgcodecs	\
 		-lopencv_videoio	\
-		-lopencv_tracking
+		-lopencv_tracking	\
+		-lopencv_features2d
 		# locate libopencv_ to see all of these, and what folders they reside in
 
 # define the C source files

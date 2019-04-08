@@ -8,7 +8,7 @@
 # include "opencv2/core/core.hpp"
 # include "opencv2/features2d/features2d.hpp"
 # include "opencv2/highgui/highgui.hpp"
-# include "opencv2/nonfree/features2d.hpp"
+//# include "opencv2/nonfree/features2d.hpp"
 
 using namespace cv;
 
@@ -36,19 +36,32 @@ ImageMatch::ImageMatch(std::string dir)
 
         images.push_back(image);
     }
+
+    // Calculate keypoints and descriptors
+    minHessian = 800;
+    for (int i = 0; i < count; i++)
+    {
+        Ptr<ORB> detector = ORB::create(800);
+        std::vector<KeyPoint> img_keypoints;
+        Mat img_descriptors;
+        detector->detectAndCompute(images[i], noArray(), img_keypoints, img_descriptors);
+        keypoints.push_back(img_keypoints);
+        descriptors.push_back(img_descriptors);
+
+        Log::Log("%d keypoints\n", (int)img_keypoints.size());
+    }
 }
 
 // Return a list of match scores. Perhaps this will be a different score for every method.
-std::vector<float> ImageMatch::getScores(Mat img)
+std::vector<float> ImageMatch::getScores(Mat img) const
 {
     std::vector<float> ret;
     return ret;
 }
 
-Mat ImageMatch::getBestMatch(Mat img)
+Mat ImageMatch::getBestMatch(Mat img) const
 {
-    return images[surf(img)];
-    return img;
+    return images[orb(img)];
 }
 
 // Get the size of the slides
@@ -69,72 +82,50 @@ int ImageMatch::getType() const
     Matching
 */
 
-/**
- * @file SURF_FlannMatcher
- * @brief SURF detector + descriptor + FLANN Matcher
- * @author A. Huaman
- */
-
-#ifndef HAVE_OPENCV_NONFREE
-
-int ImageMatch::surf(const Mat img, )
-{
-    Log::Log("The sample requires nonfree module that is not available in your OpenCV distribution.\n");
-    throw exception;
-    return 0;
-}
-
-#else
-
 // Returns an index to the images vector
-int ImageMatch::surf(const Mat mat)
+int ImageMatch::orb(const Mat mat) const
 {
     // For each slide, get a keypoint matching score
     std::vector<int> scores;
+    
+    // Get keypoints and descriptors from input image
+    Ptr<ORB> detector = ORB::create(minHessian);
+    std::vector<KeyPoint> mat_keypoints;
+    Mat mat_descriptors;
+    detector->detectAndCompute(mat, noArray(), mat_keypoints, mat_descriptors);
 
-    int minHessian = 400;
+    std::vector<std::vector<DMatch>> kept_matches;
 
-    for (auto img : images)
+    for (uint i = 0; i < images.size(); ++i)
     {
-        // Get keypoints
-        SurfFeatureDetector detector( minHessian );
-        std::vector<KeyPoint> keypoints1, keypoints2;
-        detector.detect(mat, keypoints1);
-        detector.detect(img, keypoints2);
+        // Get matches
+        Ptr<DescriptorMatcher> matcher = DescriptorMatcher::create(DescriptorMatcher::BRUTEFORCE);
+        std::vector<DMatch> matches;
+        matcher->match(mat_descriptors, descriptors[i], matches);
 
-        // Get descriptors (feature vectors)
-        SurfDescriptorExtractor extractor;
-        Mat descriptors1, descriptors2;
-        extractor.compute(mat, keypoints1, descriptors1);
-        extractor.compute(img, keypoints2, descriptors2);
-
-        // Get matches using a FLANN matcher
-        FlannBasedMatcher matcher;
-        std::vector< DMatch > matches;
-        matcher.match(descriptors1, descriptors2, matches);
-
-        //-- Filter matches by distance. They shouldn't have moved very far.
+        // Filter matches by distance. They shouldn't have moved very far.
         std::vector<DMatch> good_matches;
-        int maxDistance = mat.cols/10;
-        for (size_t i = 0; i < matches.size(); i++)
+        int maxDistance = 200;
+        for (size_t j = 0; j < matches.size(); j++)
         {
-            if (matches[i].distance < maxDistance )
+            if (matches[j].distance < maxDistance )
             {
-                good_matches.push_back(matches[i]);
+                good_matches.push_back(matches[j]);
             }
         }
 
         // Record the total number of matches
         scores.push_back(good_matches.size());
+        kept_matches.push_back(good_matches);
     }
-  
 
     Log::Log("\n");
-    int bestMatch = -1;
+    int bestMatch = 0;
     int bestValue = 0;
-    for (int i = 0; i < scores.size(); i++)
+    for (uint i = 0; i < scores.size(); i++)
     {
-        Log::Log(" %d ",);
+        Log::Log(" %d ", scores[i]);
+
         if (scores[i] > bestValue)
         {
             bestValue = scores[i];
@@ -143,7 +134,13 @@ int ImageMatch::surf(const Mat mat)
     }
     Log::Log("\n");
 
+    // Draw matches
+    Mat img_matches;
+    drawMatches( mat, mat_keypoints, images[bestMatch], keypoints[bestMatch], kept_matches[bestMatch], img_matches, Scalar::all(-1),
+                 Scalar::all(-1), std::vector<char>(), DrawMatchesFlags::NOT_DRAW_SINGLE_POINTS );
+    // Show detected matches
+    imshow("Good Matches", img_matches );
+    waitKey(50);
+
     return bestMatch;
 }
-
-#endif

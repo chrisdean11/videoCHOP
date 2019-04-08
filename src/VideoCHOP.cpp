@@ -462,28 +462,7 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
     VideoWriter dst;
     ImageMatch imageMatch(imageFolder);
     Size slideSize = imageMatch.getSize();
-
-    // Load slides
-//    std::vector<std::string> filenames;
-//    glob(imageFolder + "*", filenames, false);
-//
-//    int count = filenames.size(); 
-//    for (int i = 0; i < count; i++)
-//    {
-//        Mat slide;
-//
-//        try
-//        {
-//            slide = imread(filenames[i], IMREAD_COLOR);
-//        }
-//        catch (const std::exception & e)
-//        {
-//            Log::Log("Could not load %s: %s\n", filenames[i].c_str(), e.what());
-//            continue;
-//        }
-//
-//        slides.push_back(slide);
-//    }
+    std::string window = "debug window"; 
 
     // Open video files
     src = VideoCapture(srcname);
@@ -500,12 +479,10 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
     double fps = src.get(CAP_PROP_FPS);
 
     // Output video is same size as source image
-    // Size slideSize = slides[0].size();
     dst = VideoWriter(dstname, ex, fps, slideSize, true);
 
-    // For each frame:
+    // Match each frame:
     bool firstFrame = true;
-
     for(;;)
     {
         Mat mat;
@@ -517,42 +494,14 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
         else if (firstFrame)
         {
             // On first frame, select four corners of screen
-            std::string windowname = "Select presentation screen";
-            namedWindow(windowname);
+            std::string selectionwindow = "Select presentation screen";
+            namedWindow(selectionwindow);
             Point p;
-            setMouseCallback(windowname, mouseCallback, &mat);
+            setMouseCallback(selectionwindow, mouseCallback, &mat);
 
-
-            //while(a == Point(-1,-1))
-            //{
-            //    cv::imshow(windowname, mat);
-            //}
-//
-            //a = p;
-//
-            //while(b == Point(-1,-1))
-            //{
-            //    cv::imshow(windowname, mat);
-            //}
-//
-            //b = p;
-//
-            //while(c == Point(-1,-1))
-            //{
-            //    cv::imshow(windowname, mat);
-            //}
-//
-            //c = p;
-
-            //while(d == Point(-1,-1))
-            //{
-            //    cv::imshow(windowname, mat);
-            //}
-
-            cv::imshow(windowname, mat);
+            imshow(selectionwindow, mat);
             waitKey(0);
-
-            //d = p;
+            destroyWindow(selectionwindow);
 
             firstFrame = false;
         }
@@ -571,41 +520,21 @@ bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string 
         dstTri[1] = Point2f(imageMatch.getSize().width, 0);
         dstTri[2] = Point2f(0, imageMatch.getSize().height);
 
-        warp_mat = getAffineTransform( srcTri, dstTri );
-        warpAffine( mat, warp_dst, warp_mat, warp_dst.size() );
-
-        // Compare output matrix with each slide. 
-            // Come up with a confidence metric and a way to blend multiple tests together.
-            // Each test is simple and based off a certain heuristic. Returns a normalized scalar.
-                // Direct sumsq/stdev pixel difference
-                // Difference but ignoring color saturation
-                // Text comparison
-        
+        warp_mat = getAffineTransform(srcTri, dstTri);
+        warpAffine(mat, warp_dst, warp_mat, warp_dst.size());
 
         // Choose best match
-        getMatch(warp_dst INOUT);
-
+        Mat result = imageMatch.getBestMatch(warp_dst);
 
         // Add this slide to the output video
-        dst << warp_dst;
+        dst << result;
 
+        imshow(window, mat);
+        waitKey(50);
     }
 
     return true;
 }
-
-//void VideoCHOP::mouseCallback2(int event, int x, int y, int flags, void* userdata)
-//{
-//    if (event != EVENT_LBUTTONDOWN)
-//    {
-//        Log::Log("not a click");
-//        return;
-//    }
-//
-//    Point * p = (Point *)userdata;
-//    p->x = x;
-//    p->y = y;
-//}
 
 // Select points on left click
 void VideoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata)
