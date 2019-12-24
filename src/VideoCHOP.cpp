@@ -394,9 +394,9 @@ Point VideoCHOP::findObject(const Mat &frame)
         return Point(frame.cols/2, frame.rows/2);   
     }
 
+    // Convert to HSV and find center of thresholded object
     if (strcasecmp(method.c_str(), "COLOR") == 0)
     {
-        // Convert to HSV and threshold
         Mat frame_HSV, frame_threshold;
         cvtColor(frame, frame_HSV, COLOR_BGR2HSV);
 
@@ -453,6 +453,18 @@ Point VideoCHOP::findObject(const Mat &frame)
 
         return (rect.br() + rect.tl())*0.5;
     }
+}
+
+bool VideoCHOP::threshold(std::string src/*, std::string dst*/)
+{
+    Mat image = imread(src.c_str(), IMREAD_COLOR);
+    method = "color";
+    Mat image_resized;
+    cv::resize(image, image_resized, cv::Size(), 0.20, 0.20);
+
+    //apply threshold to full-size image
+    //imwrite(image_thresholded, dst);
+    return true;
 }
 
 bool VideoCHOP::slideshow(std::string srcname, std::string dstname, std::string imageFolder)
@@ -586,4 +598,234 @@ void VideoCHOP::mouseCallback(int event, int x, int y, int flags, void* userdata
         *p = Point(x,y);
         return;
     }
+}
+
+// Returns 1 for red, 2 for green, 3 for yellow. 0 if not found.
+int VideoCHOP::containsTrackBox(const Mat& inImg)
+{
+    Mat img;
+    cvtColor(inImg, img, CV_BGR2HSV);
+
+    // TODO make all these parameters or defines
+    std::vector<int> boxColors; // Red, Green, Yellow
+    //int red = 345; // Red = H 159-180, S 63-103, V 103-249
+    //int green = 137; // Green = H 58-73, S 70-185, V 204-239
+    //int yellow = 80; // Yellow =
+    
+    // Frame 37770
+    int minRedH = 159;
+    int maxRedH = 180;
+    int minRedS = 63;
+    int maxRedS = 183;
+    int minRedV = 103;
+    int maxRedV = 239;
+
+    // Frame 3700
+    int minGrnH = 49;
+    int maxGrnH = 77;
+    int minGrnS = 80;
+    int maxGrnS = 160;
+    int minGrnV = 190;
+    int maxGrnV = 239;
+
+    int minYelH = 0;
+    int maxYelH = 0;
+    int minYelS = 0;
+    int maxYelS = 0;
+    int minYelV = 0;
+    int maxYelV = 0;
+
+    int startRow = 1080/5; // Cut off top 20%
+    int endColumn = 1920/4; // Cut off right 30%
+
+    int redMatches = 0;
+    int greenMatches = 0;
+    int yellowMatches = 0;
+    int minMatches = 500; // Minimum number of matching pixels to consider this a match
+    // x=250 pixels wide typical box, 750 typical perimeter, 1 pixel thick
+
+    // Add up the matching pixels. This whole thing hinges on this being accurate.
+    for (int row = startRow; row < 1080; row++)
+    {
+        // For each pixel, check if it's a match
+        for (int col = 0; col < endColumn; col++)
+        {
+            Vec3b pixel = img.at<Vec3b>(Point(col, row));
+            int hue = pixel.val[0];
+            int sat = pixel.val[1];
+            int val = pixel.val[2];
+
+            if ( minRedH <= hue &&
+                maxRedH >= hue  &&
+                minRedS <= sat &&
+                maxRedS >= sat &&
+                minRedV <= val &&
+                maxRedV >= val
+                )
+            {
+                ++redMatches;
+            }
+            else if ( 
+                minGrnH <= hue &&
+                maxGrnH >= hue  &&
+                minGrnS <= sat &&
+                maxGrnS >= sat &&
+                minGrnV <= val &&
+                maxGrnV >= val
+                )
+            {
+                ++greenMatches;
+            }
+            else if (
+                minYelH <= hue &&
+                maxYelH >= hue  &&
+                minYelS <= sat &&
+                maxYelS >= sat &&
+                minYelV <= val &&
+                maxYelV >= val
+                )
+            {
+                ++yellowMatches;
+            }
+        }
+    }
+
+    Log::Log("red=%d grn=%d yel=%d       ",redMatches,greenMatches,yellowMatches);
+
+    if (minMatches < redMatches) return 1; 
+    else if (minMatches < greenMatches) return 2;
+    //else if (minMatches < yellowMatches) return 3;
+
+    return 0;
+}
+
+bool VideoCHOP::trackBoxTimes(std::string srcname, std::string dstname)
+{
+    bool tracking = false; // If currently in the middle of a track
+    int waitCount = 0; 
+    int waitFor = 90; // 30 * 3 seconds
+    int start, end;
+    VideoCapture src;
+    namedWindow("Video",1);
+
+    // File writer
+    std::ofstream file;
+    file.open(dstname);
+    std::string line;
+
+    // Open video file
+    src = VideoCapture(srcname);
+
+    if (!src.isOpened())
+    {
+        Log::Log("Error: %s not opened successfully.\n", srcname.c_str());
+        return false;
+    }
+
+    int skipCount = 3600; // Skip roughly the first 2 minutes. 30*60*2
+    int count = 0;
+
+    // Find track boxes
+    for(;;)
+    {
+        Mat mat;
+        ++count;
+
+        if(!src.read(mat))
+        {
+            break;
+        }
+        // Optionally skip
+        else if (--skipCount > 0) 
+        {
+            continue;
+        }
+
+        int found = containsTrackBox(mat);
+
+        if (found)
+        {
+            // Print result
+            if (found == 1) { Log::Log("RED"); }
+            else if (found == 2) { Log::Log("GREEN"); }
+            else if (found == 3) { Log::Log("YELLOW"); }
+
+            // Begin new clip if starting track
+            if (!tracking)
+            {
+                if (count < waitFor)
+                {
+                    start = 0;
+                }
+                else start = count - waitFor;
+            }
+
+            tracking = true;
+            waitCount = 0;
+        }
+        else // not found
+        {
+            if (tracking)
+            {
+                ++waitCount;
+                if (waitCount > waitFor)
+                {
+                    tracking = false;
+                    end = count;
+
+                    // Write start and end to file
+                    int startMinutes = start/(30*60);
+                    int startSeconds = start - startMinutes*30*60;
+                    int endMinutes = end/(30*60);
+                    int endSeconds = end - endMinutes*30*60;
+                    file<<startMinutes<<":"<<startSeconds<<" "<<endMinutes<<":"<<endSeconds<<"\n";
+                }
+            }
+        }
+
+        Log::Log("\n");
+
+        imshow("Video", mat);
+        if(waitKey(30) >= 0) break;
+    }
+
+    file.close();
+    return true;
+}
+
+void VideoCHOP::showAndSelectColorAtTime(std::string srcname, int frameNum)
+{
+    // Open video and cycle to frame
+    VideoCapture src;
+    namedWindow("Video",1);
+
+    // Open video file
+    src = VideoCapture(srcname);
+
+    if (!src.isOpened())
+    {
+        Log::Log("Error: %s not opened successfully.\n", srcname.c_str());
+        return;
+    }
+
+    Mat mat;
+    int count = 0; 
+    // Find track boxes
+    for(;;)
+    {
+        if(!src.read(mat))
+        {
+            break;
+        }
+        else if (++count < frameNum)
+        {
+            continue;
+        }
+
+        // This is the frame
+
+        SelectHSV::showAndSelectColor(mat);
+        break;
+    }
+
 }

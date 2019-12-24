@@ -79,11 +79,28 @@ int main(int argc, char** argv )
             Log::Log("slideshow returned false\n");
         }
     }
+    else if (argc == 3 && std::string(argv[1]).compare("thresh") == 0)
+    {
+        std::string src = std::string(argv[2]);
+        Log::Log("thresholding");
+
+        vc.threshold(src);
+    }
+    else if (argc == 3 && std::string(argv[1]).compare("trackbox") == 0)
+    {
+        std::string src = std::string(argv[2]);
+        Log::Log("trackbox");
+
+        vc.trackBoxTimes(src, "out.txt");
+        //vc.showAndSelectColorAtTime(src, 3700);
+    }
     else
     {
         Log::Log("Usage: ./videoCHOP chop /path/to/filename.mp4 /path/to/timestamps.txt /path/to/destinationfolder\n");
         Log::Log("Usage: ./videoCHOP crop /path/to/filename.mp4 /path/to/destfile.mp4 width height [speed] [method] [dots]\n");
         Log::Log("Usage: ./videoCHOP slideshow /path/to/filename.mp4 /path/to/destfile.mp4 /path/to/images/folder\n");
+        Log::Log("Usage: ./videoCHOP thresh /path/to/filename.jpg\n");
+        Log::Log("Usage: ./videoCHOP trackbox /path/to/video.mp4\n");
         return 1;
     }
 
