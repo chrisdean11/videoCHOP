@@ -22,7 +22,7 @@ public:
     bool slideshow(std::string src, std::string dst, std::string imageFolder);
     bool threshold(std::string src); // View image and apply HSV thresholds to it
     std::string method;
-    bool trackBoxTimes(std::string srcname, std::string dstname);
+    bool greenBoxTimes(std::string srcname, std::string dstname);
     void showAndSelectColorAtTime(std::string srcname, int frameNum);
 
 private:
@@ -47,5 +47,5 @@ private:
     bool getAllFramesFromVideo(std::vector<cv::Mat> &frames, const std::string &videoname, int &codec, double &fps, cv::Size &size);
     cv::Point findObject(const cv::Mat &mat);
     static void mouseCallback(int event, int x, int y, int flags, void* userdata);
-    int containsTrackBox(const cv::Mat &inImg);
+    int containsBox(cv::Mat &inImg);
 };
